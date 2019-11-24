@@ -1,23 +1,74 @@
 <template>
   <div id="app">
     <b-navbar toggleable="lg" type="dark" variant="dark">
-      <b-navbar-brand href="/#/" style="margin-top:3px"><img src="./assets/logo.png" height="22" style="float:left; margin-right:10px;"> Sidechain Explorer</b-navbar-brand>
+      <b-navbar-brand href="/#/" style="margin-top:3px">
+        <img src="./assets/logo.png" height="22" style="float:left; margin-right:10px;" /> Sidechain Explorer
+      </b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav class="ml-auto">
           <b-nav-form>
-            <b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>
-            <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
+            <b-form-input
+              size="sm"
+              v-model="address"
+              class="mr-sm-2"
+              placeholder="Search address or sxid"
+            ></b-form-input>
+            <b-button size="sm" v-on:click="searchAssets" class="my-2 my-sm-0">Search</b-button>
           </b-nav-form>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
     <router-view />
-    <hr>
+    <hr />
     <div style="font-size:11px; text-align:center; padding:4px 0 8px 0">
-      This is an <a href="https://github.com/scryptachain/scrypta-sidechain-explorer" _target="blank">Open Source Project</a> by Scrypta Task Force
+      This is an
+      <a
+        href="https://github.com/scryptachain/scrypta-sidechain-explorer"
+        _target="blank"
+      >Open Source Project</a> by Scrypta Task Force
     </div>
   </div>
 </template>
+<script>
+export default {
+  name: "home",
+  data() {
+    return {
+      address: '',
+      axios: window.axios,
+      scrypta: window.ScryptaCore,
+      idanode: ""
+    }
+  },
+  mounted: async function() {
+    const app = this;
+    app.idanode = await app.scrypta.connectNode();
+  },
+  methods: {
+    async searchAssets() {
+      const app = this
+      if(this.address.length === 34){
+        window.location = '/#/scan/' + this.address
+      }
+      if(this.address.length === 64){
+        app.axios.get(app.idanode + "/sidechain/list").then(async response => {
+        for (let x in response.data.data) {
+          let sidechain = response.data.data[x];
+          let check = await app.axios
+            .post(app.idanode + "/sidechain/transaction", {
+              sidechain_address: sidechain.address,
+              sxid: app.address
+            })
+          if(check.data.transaction !== undefined){
+            window.location = '/#/sxid/' + check.data.transaction.data.transaction.sidechain + '/' + app.address
+          }
+        }
+      });
+      }
+    }
+  }
+}
+</script>
