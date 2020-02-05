@@ -5,8 +5,17 @@
         <h3>
           {{ sidechain.name }}
           <br />
-          <span style="font-size:13px">{{ $route.params.sidechain }}</span>
-        </h3>
+          <span style="font-size:13px">{{ $route.params.sidechain }} - CAP: {{ cap }} </span>
+        </h3>          
+        <div class="btn btn-primary btn-sm" v-on:click="toggleShares" style="float:right; margin-top:-45px; cursor:pointer;"><span v-if="!showShares">SHOW</span><span v-if="showShares">HIDE</span> SHARES</div>
+
+        <div v-if="showShares">
+          <div class="row">
+            <div class="col-sm-6 offset-sm-3">
+              <apexchart width="100%" type="pie" :options="options" :series="series"></apexchart>
+            </div>
+          </div>
+        </div>
         <b-table striped hover :items="transactions" :fields="fields">
           <template v-slot:cell(details)="data">
             <a :href = "'/#/sxid/' + $route.params.sidechain + '/' + data.item.sxid"><div class="btn btn-primary">></div></a>
@@ -35,6 +44,14 @@ export default {
     app.fetchSidechain();
   },
   methods: {
+    toggleShares(){
+      const app = this
+      if(app.showShares === false){
+        app.showShares = true
+      }else{
+        app.showShares = false
+      }
+    },
     fetchSidechain() {
       const app = this;
       app.axios.get(app.idanode + "/sidechain/list").then(response => {
@@ -53,6 +70,19 @@ export default {
           }
         }
       });
+      app.axios
+        .post(app.idanode + "/sidechain/shares", {
+          sidechain_address: app.$route.params.sidechain
+        })
+        .then(response => {
+          let shares = response.data.shares
+          app.series = []
+          for(let x in shares){
+            app.series.push(shares[x].shares)
+            app.options.labels.push(x + ' ' + shares[x].balance + ' ' + app.sidechain.symbol)
+          }
+          app.cap = response.data.cap
+        })
       app.axios
         .post(app.idanode + "/sidechain/scan", {
           sidechain_address: app.$route.params.sidechain
@@ -78,12 +108,18 @@ export default {
               from = 'GENESIS'
             }
             if(from !== undefined){
+              let Block
+              if(response.data.data[x].block > 0){
+                Block = response.data.data[x].block
+              }else{
+                Block = 'unconfirmed'
+              }
               let transaction = {
                 sxid: response.data.data[x].sxid,
                 value: value + " " + app.sidechain.symbol,
                 from: from,
                 to: to,
-                block: response.data.data[x].block
+                block: Block
               };
               transactions.push(transaction);
             }
@@ -99,12 +135,18 @@ export default {
       idanode: "",
       transactions: [],
       sidechain: [],
+      cap: 0,
+      options: {
+        labels: []
+      },
+      series: [],
+      showShares: false,
       fields: [
         "sxid",
         "value",
         "from",
         "to",
-        { key: "block", sortable: true },
+        "block",
         "details"
       ]
     };
