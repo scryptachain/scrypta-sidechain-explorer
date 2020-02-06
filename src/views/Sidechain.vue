@@ -93,19 +93,24 @@ export default {
             let value = 0;
             let to = "";
             for (let y in response.data.data[x].transaction.outputs) {
-              if (y != response.data.data[x].transaction.inputs[0]["address"]) {
+              if (y != response.data.data[x]["address"]) {
+                value += response.data.data[x].transaction.outputs[y];
+                to = y;
+              }
+            }
+            if(to === ""){
+              for (let y in response.data.data[x].transaction.outputs) {
                 value += response.data.data[x].transaction.outputs[y];
                 to = y;
               }
             }
             let from = "";
-            if (
-              response.data.data[x].transaction.inputs[0]["address"] !==
-              undefined
-            ) {
-              from = response.data.data[x].transaction.inputs[0]["address"];
-            }else{
+            if (response.data.data[x].transaction["inputs"][0]['vout'] === 'genesis') {
               from = 'GENESIS'
+            }else if(response.data.data[x].transaction["inputs"][0]['vout'] === 'reissue') {
+              from = 'REISSUE'
+            }else{
+              from = response.data.data[x]["address"]
             }
             if(from !== undefined){
               let Block
