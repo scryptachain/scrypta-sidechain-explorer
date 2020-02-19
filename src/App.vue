@@ -18,6 +18,9 @@
             ></b-form-input>
             <b-button size="sm" v-on:click="searchAssets" class="my-2 my-sm-0">Search</b-button>
           </b-nav-form>
+          <a href="/#/create"> 
+            <b-button size="sm" class="btn-success my-2 my-sm-0" style="margin-left:10px">CREATE</b-button>
+          </a>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>

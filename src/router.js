@@ -5,6 +5,8 @@ import Sidechain from './views/Sidechain.vue'
 import Scan from './views/Scan.vue'
 import Transaction from './views/Transaction.vue'
 import Transactions from './views/Transactions.vue'
+import Create from './views/Create.vue'
+import Login from './views/Login.vue'
 
 Vue.use(Router)
 
@@ -24,6 +26,16 @@ export default new Router({
       path: '/sidechain/:sidechain',
       name: 'sidechain',
       component: Sidechain
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
+      path: '/create',
+      name: 'create',
+      component: Create
     },
     {
       path: '/scan/:address',
