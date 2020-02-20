@@ -17,7 +17,10 @@
     </b-modal>
     <div class="col-sm-4 offset-sm-4" style="text-align:left">
       <h3 style="text-align:center;">
-        Create new Sidechain
+        Create new Sidechain<br>
+        <span style="font-size:13px">
+          using <i>{{ user }}</i>. <a href="#" v-on:click="logout">(Logout)</a>
+        </span>
       </h3>    
       <hr>
       Asset name:
@@ -61,6 +64,11 @@ export default {
     app.checkUser();
   },
   methods: {
+     async logout(){
+      const app = this
+      await app.scrypta.forgetKey()
+      location.reload()
+    },
     async checkUser(){
       const app = this
       let user = await app.scrypta.keyExist()
