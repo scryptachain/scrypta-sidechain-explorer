@@ -35,6 +35,11 @@
     </div>
   </div>
 </template>
+<style>
+.node-badge{
+  background-color: white;
+}
+</style>
 <script>
 export default {
   name: "home",
