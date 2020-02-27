@@ -46,9 +46,7 @@
              SIDECHAIN LAYER
             </p>
             <h5 style="color: white; text-align: justify;">
-              Open and permissionless Sidechains system that allows issuing, exchanging and tracking digital assets.
-              <br />
-              <br />Planum sidechain layer allow to anyone to create and issue his own tokenized asset. Any tokenized assets, once generated with his own metrics, have his independent life cycle in a secured sidechain layer, which runs on top of the Scrypta blockchain ‌
+              <br />Planum sidechain layer allow to anyone to create and issue his own tokenized asset. Any tokenized assets, once generated with his own metrics, have his independent life cycle in a secured sidechain layer, which runs on top of the Scrypta blockchain. ‌
             </h5>
           </div>
         </div>
@@ -87,7 +85,7 @@
                     ></b-form-input>
                   </div>
                   <div class="col-sm-6 my-auto" style="text-align: justify; font-size: 16px;">
-                    <p>Type the name and the alphanumeric symbol of your token, this is a purely descriptive field and the uniqueness is not guaranteed. For your safety and that of your users, create a name that characterizes the project. ‌</p>
+                    <p>Type the name and the alphanumeric symbol of your asset, this is a purely descriptive field and the uniqueness is not guaranteed. For your safety and that of your users, create a name that characterizes the project. ‌</p>
                   </div>
                 </div>
               </b-card>
@@ -108,7 +106,7 @@
                 <div class="row">
                   <div class="col-sm-6 my-auto">
                     <b-form-input v-model="asset.supply" placeholder="Enter asset supply"></b-form-input>
-                    <p style="margin-top: 30px;"><strong>*Set the decimals division of the token</strong></p>
+                    <p style="margin-top: 30px;"><strong>*Set the decimals division of the asset</strong></p>
                     <range-slider class="slider" min="0" max="8" step="1" v-model="asset.decimals"></range-slider>
                     {{
                     asset.decimals
@@ -116,7 +114,7 @@
                     <br />
                   </div>
                   <div class="col-sm-6 my-auto" style="text-align: justify; font-size: 16px;">
-                    <p>Enter the total supply number for your digital asset. This represent the total number of tokens issued. Set also the decimals number of your digital asset.</p>
+                    <p>Enter the total supply of your digital asset. This represent the total number of assets issued. Set also the decimals of your digital asset.</p>
                   </div>
                 </div>
               </b-card>
@@ -148,7 +146,7 @@
                     >This asset can be burned</b-form-checkbox>
                   </div>
                   <div class="col-sm-6 my-auto" style="text-align: justify; font-size: 16px;">
-                    <p>You have the option to make the token "reissuable" (owner can add any amount of supply also after the token is issued), or "burnable" (owner can destroy a portion or the whole supply of the token ‌</p>
+                    <p>You have the option to make the asset "reissuable" (owner can add any amount of supply also after the asset is issued), or "burnable" (anyone can destroy a portion or the whole supply of the asset sending assets to the sidechain's address) ‌</p>
                   </div>
                 </div>
               </b-card>
