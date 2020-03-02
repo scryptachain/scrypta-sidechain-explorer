@@ -19,12 +19,12 @@ export default new Router({
     },
     {
       path: '/sidechain/:sidechain/:address',
-      name: 'sidechain',
+      name: 'sidechain-transactions',
       component: Transactions
     },
     {
       path: '/sidechain/:sidechain',
-      name: 'sidechain',
+      name: 'sidechain-single',
       component: Sidechain
     },
     {

@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <b-navbar toggleable="lg" type="dark" variant="dark">
+    <b-navbar toggleable="lg" type="dark" variant="light">
       <b-navbar-brand href="/#/" style="margin-top:3px">
-        <img src="./assets/logo.png" height="22" style="float:left; margin-right:10px;" /> Sidechain Explorer
+        <img src="./assets/planum.png" height="22" style="float:left; margin-right:10px;" />
       </b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -31,7 +31,7 @@
       <a
         href="https://github.com/scryptachain/scrypta-sidechain-explorer"
         _target="blank"
-      >Open Source Project</a> by Scrypta Task Force
+      >Open Source Project</a> by <a href="https://scrypta.foundation" target="_blank">Scrypta Foundation</a>
     </div>
   </div>
 </template>

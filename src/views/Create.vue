@@ -73,7 +73,7 @@
             >
               <strong>ASSET BASICS</strong>
             </b-button>
-            <b-collapse id="collapse-2" style="display: block;" >
+            <b-collapse id="collapse-2" style="display: block;">
               <b-card style="opacity: 0.9">
                 <div class="row">
                   <div class="col-sm-6 my-auto">
