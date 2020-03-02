@@ -11,6 +11,9 @@
             <br />
             <br />With Planum you can digitalize and convert anything into a supply of digital assets through the process of "tokenization". That way the physical good, once tokenized, become "fungible", can be transferred, fractioned, stored or traded electronically between different people's in a digital way.
           </h5>
+          <a href="/#/login" v-if="!user"> 
+            <b-button size="sm" class="btn-danger my-2 my-sm-0" style="width: 30%;">LOGIN</b-button>
+          </a>
         </div>
       </div>
     </div>
@@ -46,3 +49,45 @@
   opacity: 0.85;
 }
 </style>
+<script>
+export default {
+  name: "home",
+  mounted: async function() {
+    const app = this;
+    app.idanode = await app.scrypta.connectNode();
+    app.checkUser();
+  },
+  components: {
+    
+  },
+  methods: {
+    async logout() {
+      const app = this;
+      await app.scrypta.forgetKey();
+      location.reload();
+    },
+    async checkUser() {
+      const app = this;
+      let user = await app.scrypta.keyExist();
+      app.public_address = this.scrypta.PubAddress;
+      app.encrypted_wallet = this.scrypta.RAWsAPIKey;
+      if (user.length === 34) {
+        app.user = user;
+      }
+    }
+  },
+  data() {
+    return {
+      scrypta: window.ScryptaCore,
+      axios: window.axios,
+      issueResponse: "",
+      passwordShow: false,
+      public_address: "",
+      isUploading: false,
+      encrypted_wallet: "",
+      idanode: "",
+      user: ""
+    };
+  }
+}
+</script>

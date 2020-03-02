@@ -85,7 +85,7 @@
                     ></b-form-input>
                   </div>
                   <div class="col-sm-6 my-auto" style="text-align: justify; font-size: 16px;">
-                    <p>Type the name and the alphanumeric symbol of your asset, this is a purely descriptive field and the uniqueness is not guaranteed. For your safety and that of your users, create a name that characterizes the project. ‌</p>
+                    <p>Choose the name and the ticker that will identify and describe your digital asset. Please choose a name that characterizes the project.</p>
                   </div>
                 </div>
               </b-card>
@@ -146,7 +146,7 @@
                     >This asset can be burned</b-form-checkbox>
                   </div>
                   <div class="col-sm-6 my-auto" style="text-align: justify; font-size: 16px;">
-                    <p>You have the option to make the asset "reissuable" (owner can add any amount of supply also after the asset is issued), or "burnable" (anyone can destroy a portion or the whole supply of the asset sending assets to the sidechain's address) ‌</p>
+                    <p>You can set your asset as  "reissuable" (owner can add any amount of supply also after the asset is issued), and "burnable" (anyone can destroy a portion or the whole supply of the asset sending assets to a proper burn address.</p>
                   </div>
                 </div>
               </b-card>
@@ -249,7 +249,7 @@ import RangeSlider from "vue-range-slider";
 // you probably need to import built-in style
 import "vue-range-slider/dist/vue-range-slider.css";
 export default {
-  name: "home",
+  name: "create",
   mounted: async function() {
     const app = this;
     app.idanode = await app.scrypta.connectNode();
