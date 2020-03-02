@@ -41,7 +41,7 @@
       <div class="row" style="min-height: 100vh; background-image: url('bg-sidechain.jpg');">
         <div class="col-sm-5 my-auto boxed-desktop">
           <div class="boxed-left" >
-            <img src="/img/planum.png" alt="" width="65%" class="image-logo">
+            <img src="/img/planum-logo.png" alt="" width="65%" class="image-logo">
             <p style="font-size:30px; color: white; margin-top:20px;">
              SIDECHAIN LAYER
             </p>
@@ -57,7 +57,7 @@
           <h1 style="text-align:center; color: white;">
             <strong>CREATE YOUR OWN DIGITAL ASSET</strong>
             <br />
-            <span style="font-size:13px">
+            <span v-if="user" style="font-size:13px">
               using
               <i>{{ user }}</i>.
               <a href="#" v-on:click="logout">(Logout)</a>
@@ -152,21 +152,24 @@
               </b-card>
             </b-collapse>
             </div>
-
-            <div style="text-align:center; margin-top: 25px; margin-bottom: 25px;" v-if="!issueResponse">
-              <div
-                class="btn btn-light-mod rounded-pill"
-                style="cursor:pointer"
-                v-if="!isUploading"
-                v-on:click="openUnlock"
-              >CREATE ASSET</div>
-              <span v-if="isUploading">Creating asset, please wait..</span>
+            <div v-if="user">
+              <div style="text-align:center; margin-top: 25px; margin-bottom: 25px;" v-if="!issueResponse">
+                <div
+                  class="btn btn-light-mod rounded-pill"
+                  style="cursor:pointer"
+                  v-if="!isUploading"
+                  v-on:click="openUnlock"
+                >CREATE ASSET</div>
+                <span v-if="isUploading">Creating asset, please wait..</span>
+              </div>
+              <pre
+                v-if="issueResponse"
+                style="font-size:14px; background:#eee; border:1px solid #ccc; border-radius:5px; text-align: left; padding:20px;"
+              >{{ issueResponse }}</pre>
             </div>
-            <pre
-              v-if="issueResponse"
-              style="font-size:14px; background:#eee; border:1px solid #ccc; border-radius:5px; text-align: left; padding:20px;"
-            >{{ issueResponse }}</pre>
-            
+            <div v-if="!user" style="color:#fff; font-size:18px; font-weight:bold; margin-top:15px">
+              You must login with your ScryptaID to create a Sidechain.
+            </div>
           </div>
         </div>
       </div>
@@ -268,8 +271,6 @@ export default {
       app.encrypted_wallet = this.scrypta.RAWsAPIKey;
       if (user.length === 34) {
         app.user = user;
-      } else {
-        window.location = "/#/login";
       }
     },
     openUnlock() {

@@ -7,6 +7,7 @@ import Transaction from './views/Transaction.vue'
 import Transactions from './views/Transactions.vue'
 import Create from './views/Create.vue'
 import Login from './views/Login.vue'
+import Explorer from './views/Explorer.vue'
 
 Vue.use(Router)
 
@@ -36,6 +37,11 @@ export default new Router({
       path: '/create',
       name: 'create',
       component: Create
+    },
+    {
+      path: '/explorer',
+      name: 'explorer',
+      component: Explorer
     },
     {
       path: '/scan/:address',

@@ -56,7 +56,7 @@ export default {
         reader.onload = function() {
           var dataKey = reader.result;
           app.scrypta.saveKey(dataKey).then(function() {
-            window.location = '/#/create'
+            location.reload()
           });
         };
         reader.readAsText(file);

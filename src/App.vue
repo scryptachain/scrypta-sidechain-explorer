@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <b-navbar toggleable="lg" type="dark" variant="light">
+    <b-navbar toggleable="lg" variant="light">
       <b-navbar-brand href="/#/" style="margin-top:3px">
         <img src="./assets/planum.png" height="22" style="float:left; margin-right:10px;" />
       </b-navbar-brand>
@@ -8,6 +8,11 @@
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
+          <b-nav-item href="/#/explorer">Explorer</b-nav-item>
+          <b-nav-item href="/#/create">Create</b-nav-item>
+          <b-nav-item href="https://wiki.scryptachain.org/developers/sidechain" target="_blank">Docs</b-nav-item>
+        </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
           <b-nav-form>
             <b-form-input
@@ -18,8 +23,11 @@
             ></b-form-input>
             <b-button size="sm" v-on:click="searchAssets" class="my-2 my-sm-0">Search</b-button>
           </b-nav-form>
-          <a href="/#/create"> 
-            <b-button size="sm" class="btn-success my-2 my-sm-0" style="margin-left:10px">CREATE</b-button>
+          <a href="/#/login" v-if="!user"> 
+            <b-button size="sm" class="btn-success my-2 my-sm-0" style="margin-left:10px">LOGIN</b-button>
+          </a>
+          <a href="#" v-if="user"> 
+            <b-button v-on:click="logout" size="sm" class="btn-danger my-2 my-sm-0" style="margin-left:10px">LOGOUT</b-button>
           </a>
         </b-navbar-nav>
       </b-collapse>
@@ -48,14 +56,30 @@ export default {
       address: '',
       axios: window.axios,
       scrypta: window.ScryptaCore,
-      idanode: ""
+      idanode: "",
+      user: ""
     }
   },
   mounted: async function() {
     const app = this;
     app.idanode = await app.scrypta.connectNode();
+    app.checkUser()
   },
   methods: {
+    async logout() {
+      const app = this;
+      await app.scrypta.forgetKey();
+      location.reload();
+    },
+    async checkUser() {
+      const app = this;
+      let user = await app.scrypta.keyExist();
+      app.public_address = this.scrypta.PubAddress;
+      app.encrypted_wallet = this.scrypta.RAWsAPIKey;
+      if (user.length === 34) {
+        app.user = user;
+      }
+    },
     async searchAssets() {
       const app = this
       if(this.address.length === 34){

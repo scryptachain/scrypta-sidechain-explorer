@@ -1,82 +1,48 @@
 <template>
-  <div class="home" style="margin-top:30px">
-    <div class="">
-      <div class="col-12">
-        <b-table striped hover :items="sidechains" :fields="fields">
-          <template v-slot:cell(details)="data">
-            <a :href = "'/#/sidechain/' + data.item.address"><div class="btn btn-primary">></div></a>
-          </template>
-        </b-table>
+  <div class="page-body">
+    <div class="row" style="min-height: 100vh; background-image: url('bg-sidechain.jpg');">
+      <div class="col-sm-6 offset-sm-3 my-auto mx-auto">
+        <div class="boxed-home">
+          <img src="/img/planum-logo.png" width="65%" class="image-logo" />
+          <h5 style="color: white; text-align: center; margin-top: 50px;">
+            <br />An open-source and permissionless sidechains system that provide to anyone a clear interface where create, issue and track tokenized assets.
+            <br />
+            <br />Tokenization process is basically the translation of real world assets into blockchains converting them into digital assets and providing a trustable ownership.
+            <br />
+            <br />With Planum you can digitalize and convert anything into a supply of digital assets through the process of "tokenization". That way the physical good, once tokenized, become "fungible", can be transferred, fractioned, stored or traded electronically between different people's in a digital way.
+          </h5>
+        </div>
       </div>
     </div>
-    <div class="node-badge" v-if="idanode">{{ idanode }}</div>
   </div>
 </template>
 
 <style>
-  #app{
-    text-align: center;
-    font-family: 'karmillaregular';
-    font-size:13px;
-  }
-</style>
-
-<script>
-
-export default {
-  name: 'home',
-  mounted : async function(){
-    const app = this
-    app.idanode = await app.scrypta.connectNode()
-    app.fetchSidechains()
-  },
-  methods: {
-    fetchSidechains(){
-      const app = this
-      app.axios.get(app.idanode + '/sidechain/list').then(response => {
-        let sidechains = []
-        for(let x in response.data.data){
-          let sidechain = response.data.data[x]
-          let parsed = {
-            name: sidechain.genesis.name + ' (' + sidechain.genesis.symbol + ')',
-            address: sidechain.address,
-            supply: sidechain.genesis.supply + ' ' + sidechain.genesis.symbol,
-            owner: sidechain.genesis.owner
-          }
-          sidechains.push(parsed)
-        }
-        app.sidechains = sidechains
-      })
-    }
-  },
-  data () {
-    return {
-      scrypta: window.ScryptaCore,
-      axios: window.axios,
-      idanode: '',
-      sidechains: [],
-      fields: [
-          { key: 'name', sortable: true },
-          'address',
-          'supply',
-          'owner',
-          'details'
-        ]
-    }
-  }
+#app {
+  text-align: center;
+  font-family: "karmillaregular";
+  font-size: 13px;
 }
-</script>
-
-<style>
-  .node-badge{
-    position:fixed; 
-    bottom:-3px; 
-    font-size:10px; 
-    padding:8px; 
-    right:10px; 
-    z-index:9999; 
-    border: 1px solid #ccc; 
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-  }
+.page-body {
+  margin: 0px;
+  min-height: 100vh;
+  padding: 0px;
+  overflow-x: hidden;
+}
+.boxed-home {
+  border-radius: 15px;
+  border: 2px solid #d7293b;
+  outline: 2px white;
+  margin: auto;
+  padding: 60px;
+  background-color: #002537;
+  opacity: 0.85;
+}
+.boxed-wiki {   
+  border-radius: 15px;
+  border: 2px solid #d7293b;
+  outline: 2px white;
+  background-color: #002537;
+  opacity: 0.85;
+}
 </style>
