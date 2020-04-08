@@ -2,7 +2,7 @@
   <div id="app">
     <b-navbar toggleable="lg" variant="light">
       <b-navbar-brand href="/#/" style="margin-top:3px">
-        <img src="./assets/planum.png" height="22" style="float:left; margin-right:10px;" />
+        <img src="/img/planum-logo.png" height="22" style="float:left; margin-right:10px;" />
       </b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
