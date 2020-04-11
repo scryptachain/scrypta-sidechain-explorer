@@ -5,9 +5,13 @@
         <h3>
           {{ sidechain.name }}
           <br />
-          <span style="font-size:13px">{{ $route.params.sidechain }} - CAP: {{ cap }} </span>
+          <span style="font-size:13px">
+            {{ $route.params.sidechain }}<br>
+            CAP: {{ cap }} {{ sidechain.symbol }} - BURNED: {{ burned }} {{ sidechain.symbol }}
+          </span>
         </h3>          
         <div class="btn btn-primary btn-sm" v-on:click="toggleShares" style="float:right; margin-top:-45px; cursor:pointer;"><span v-if="!showShares">SHOW</span><span v-if="showShares">HIDE</span> SHARES</div>
+        <div class="btn btn-success btn-sm" v-on:click="toggleDetails" style="float:right; margin-top:-45px; margin-right:120px; cursor:pointer;"><span v-if="!showDetails">SHOW</span><span v-if="showDetails">HIDE</span> DETAILS</div>
 
         <div v-if="showShares">
           <div class="row">
@@ -16,7 +20,24 @@
             </div>
           </div>
         </div>
-        <b-table striped hover :items="transactions" :fields="fields">
+
+        <b-table v-if="showDetails && transactions.unconfirmed.length > 0" striped hover :items="transactions.unconfirmed" :fields="fields">
+          <template v-slot:cell(details)="data">
+            <a :href = "'/#/sxid/' + $route.params.sidechain + '/' + data.item.sxid"><div class="btn btn-primary">></div></a>
+          </template>
+        </b-table>
+        <b-table v-if="showDetails" striped hover :items="transactions.confirmed" :fields="fields">
+          <template v-slot:cell(details)="data">
+            <a :href = "'/#/sxid/' + $route.params.sidechain + '/' + data.item.sxid"><div class="btn btn-primary">></div></a>
+          </template>
+        </b-table>
+
+        <b-table v-if="!showDetails && compacted.unconfirmed.length > 0" striped hover :items="compacted.unconfirmed" :fields="fields">
+          <template v-slot:cell(details)="data">
+            <a :href = "'/#/sxid/' + $route.params.sidechain + '/' + data.item.sxid"><div class="btn btn-primary">></div></a>
+          </template>
+        </b-table>
+        <b-table v-if="!showDetails" striped hover :items="compacted.confirmed" :fields="fields">
           <template v-slot:cell(details)="data">
             <a :href = "'/#/sxid/' + $route.params.sidechain + '/' + data.item.sxid"><div class="btn btn-primary">></div></a>
           </template>
@@ -52,6 +73,14 @@ export default {
         app.showShares = false
       }
     },
+    toggleDetails(){
+      const app = this
+      if(app.showDetails === false){
+        app.showDetails = true
+      }else{
+        app.showDetails = false
+      }
+    },
     fetchSidechain() {
       const app = this;
       app.axios.get(app.idanode + "/sidechain/list").then(response => {
@@ -82,13 +111,19 @@ export default {
             app.options.labels.push(x + ' ' + shares[x].balance + ' ' + app.sidechain.symbol)
           }
           app.cap = response.data.cap
+          if(shares[app.$route.params.sidechain] !== undefined){
+            app.cap = app.cap - shares[app.$route.params.sidechain].balance
+            app.burned = shares[app.$route.params.sidechain].balance
+          }
+          app.cap = app.cap.toFixed(app.sidechain.decimals)
         })
       app.axios
         .post(app.idanode + "/sidechain/scan", {
           sidechain_address: app.$route.params.sidechain
         })
         .then(response => {
-          let transactions = [];
+          let transactions = { confirmed: [], unconfirmed: [] };
+          let compacted = { confirmed: [], unconfirmed: [] };
           for (let x in response.data.data) {
             let value = 0;
             let to = "";
@@ -119,17 +154,41 @@ export default {
               }else{
                 Block = 'unconfirmed'
               }
+              let date = new Date(response.data.data[x].transaction.time)
+              let year = date.getFullYear()
+              let month = date.getMonth() + 1
+              let day = date.getDate()
+              let hours = date.getHours()
+              let minutes = "0" + date.getMinutes()
+              let formattedTime = day + '/' + month + '/' + year +' at ' + hours + ':' + minutes.substr(-2)
+
               let transaction = {
                 sxid: response.data.data[x].sxid,
                 value: value + " " + app.sidechain.symbol,
                 from: from,
                 to: to,
-                block: Block
+                block: Block,
+                time: formattedTime
               };
-              transactions.push(transaction);
+              let compact = {
+                sxid: response.data.data[x].sxid.substr(0,4) + '...' + response.data.data[x].sxid.substr(-4),
+                value: value + " " + app.sidechain.symbol,
+                from: from.substr(0,4) + '...' + from.substr(-4),
+                to: to.substr(0,4) + '...' + to.substr(-4),
+                block: Block,
+                time: formattedTime
+              };
+              if(response.data.data[x].block > 0){
+                transactions.confirmed.push(transaction);
+                compacted.confirmed.push(compact);
+              }else{
+                transactions.unconfirmed.push(transaction);
+                compacted.unconfirmed.push(compact);
+              }
             }
           }
           app.transactions = transactions;
+          app.compacted = compacted;
         });
     }
   },
@@ -138,20 +197,30 @@ export default {
       scrypta: window.ScryptaCore,
       axios: window.axios,
       idanode: "",
-      transactions: [],
+      transactions: {
+        confirmed: [],
+        unconfirmed: []
+      },
+      compacted: {
+        confirmed: [],
+        unconfirmed: []
+      },
       sidechain: [],
+      burned: 0,
       cap: 0,
       options: {
         labels: []
       },
       series: [],
       showShares: false,
+      showDetails: false,
       fields: [
         "sxid",
         "value",
         "from",
         "to",
         "block",
+        "time",
         "details"
       ]
     };
