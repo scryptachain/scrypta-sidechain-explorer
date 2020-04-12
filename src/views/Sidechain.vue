@@ -63,6 +63,9 @@ export default {
     const app = this;
     app.idanode = await app.scrypta.connectNode();
     app.fetchSidechain();
+    setInterval(function(){
+      app.fetchSidechain()
+    },10000)
   },
   methods: {
     toggleShares(){
