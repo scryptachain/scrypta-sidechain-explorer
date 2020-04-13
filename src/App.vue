@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <b-navbar toggleable="lg" variant="light">
+    <b-navbar v-if="showMenu" toggleable="lg" variant="light">
       <b-navbar-brand href="/#/" style="margin-top:3px">
         <img src="/img/planum-logo.png" height="22" style="float:left; margin-right:10px;" />
       </b-navbar-brand>
@@ -33,8 +33,8 @@
       </b-collapse>
     </b-navbar>
     <router-view />
-    <hr />
-    <div style="font-size:11px; text-align:center; padding:4px 0 8px 0">
+    <div v-if="showMenu" style="font-size:11px; text-align:center; padding:4px 0 8px 0">
+      <hr />
       This is an
       <a
         href="https://github.com/scryptachain/scrypta-sidechain-explorer"
@@ -47,6 +47,10 @@
 .node-badge{
   background-color: white;
 }
+@media screen and (max-width: 768px){
+  .form-inline .input, .form-inline{width:100%; text-align:center!important;}
+  .navbar-nav .btn, .form-inline .btn {width:100%; margin:5px 0!important;}
+}
 </style>
 <script>
 export default {
@@ -57,6 +61,7 @@ export default {
       axios: window.axios,
       scrypta: window.ScryptaCore,
       idanode: "",
+      showMenu: false,
       user: ""
     }
   },
@@ -64,12 +69,27 @@ export default {
     const app = this;
     app.idanode = await app.scrypta.connectNode();
     app.checkUser()
+    if(app.$route.path !== '/' && app.$route.path !== '/create'){
+      app.showMenu = true
+    }else{
+      app.showMenu = false
+    }
+  },
+  watch: {
+    $route(to) {
+      const app = this
+      if(to.path !== '/' && to.path !== '/create'){
+        app.showMenu = true
+      }else{
+        app.showMenu = false
+      }
+    }
   },
   methods: {
     async logout() {
       const app = this;
       await app.scrypta.forgetKey();
-      location.reload();
+      window.location = '/'
     },
     async checkUser() {
       const app = this;

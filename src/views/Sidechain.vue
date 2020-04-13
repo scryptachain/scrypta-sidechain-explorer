@@ -9,10 +9,11 @@
             {{ $route.params.sidechain }}<br>
             CAP: {{ cap }} {{ sidechain.symbol }} - BURNED: {{ burned }} {{ sidechain.symbol }}
           </span>
-        </h3>          
-        <div class="btn btn-primary btn-sm" v-on:click="toggleShares" style="float:right; margin-top:-45px; cursor:pointer;"><span v-if="!showShares">SHOW</span><span v-if="showShares">HIDE</span> SHARES</div>
-        <div class="btn btn-success btn-sm" v-on:click="toggleDetails" style="float:right; margin-top:-45px; margin-right:120px; cursor:pointer;"><span v-if="!showDetails">SHOW</span><span v-if="showDetails">HIDE</span> DETAILS</div>
-
+        </h3>    
+        <div style="text-align:center; margin-bottom:20px;">      
+          <div class="btn btn-primary btn-sm" v-on:click="toggleShares" style="margin:0 5px; cursor:pointer;"><span v-if="!showShares">SHOW</span><span v-if="showShares">HIDE</span> SHARES</div>
+          <div class="btn btn-success btn-sm" v-on:click="toggleDetails" style="margin:0 5px; cursor:pointer;"><span v-if="!showDetails">SHOW</span><span v-if="showDetails">HIDE</span> DETAILS</div>
+        </div>
         <div v-if="showShares">
           <div class="row">
             <div class="col-sm-6 offset-sm-3">
@@ -21,23 +22,23 @@
           </div>
         </div>
 
-        <b-table v-if="showDetails && transactions.unconfirmed.length > 0" striped hover :items="transactions.unconfirmed" :fields="fields">
+        <b-table stacked="sm" v-if="showDetails && transactions.unconfirmed.length > 0" striped hover :items="transactions.unconfirmed" :fields="fields">
           <template v-slot:cell(details)="data">
             <a :href = "'/#/sxid/' + $route.params.sidechain + '/' + data.item.sxid"><div class="btn btn-primary">></div></a>
           </template>
         </b-table>
-        <b-table v-if="showDetails" striped hover :items="transactions.confirmed" :fields="fields">
+        <b-table stacked="sm" v-if="showDetails" striped hover :items="transactions.confirmed" :fields="fields">
           <template v-slot:cell(details)="data">
             <a :href = "'/#/sxid/' + $route.params.sidechain + '/' + data.item.sxid"><div class="btn btn-primary">></div></a>
           </template>
         </b-table>
 
-        <b-table v-if="!showDetails && compacted.unconfirmed.length > 0" striped hover :items="compacted.unconfirmed" :fields="fields">
+        <b-table stacked="sm" v-if="!showDetails && compacted.unconfirmed.length > 0" striped hover :items="compacted.unconfirmed" :fields="fields">
           <template v-slot:cell(details)="data">
             <a :href = "'/#/sxid/' + $route.params.sidechain + '/' + data.item.sxid"><div class="btn btn-primary">></div></a>
           </template>
         </b-table>
-        <b-table v-if="!showDetails" striped hover :items="compacted.confirmed" :fields="fields">
+        <b-table stacked="sm" v-if="!showDetails" striped hover :items="compacted.confirmed" :fields="fields">
           <template v-slot:cell(details)="data">
             <a :href = "'/#/sxid/' + $route.params.sidechain + '/' + data.item.sxid"><div class="btn btn-primary">></div></a>
           </template>

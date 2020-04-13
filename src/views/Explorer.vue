@@ -2,7 +2,7 @@
   <div class="home" style="margin-top:30px">
     <div class="">
       <div class="col-12">
-        <b-table striped hover :items="sidechains" :fields="fields">
+        <b-table stacked="sm" :items="sidechains" :fields="fields">
           <template v-slot:cell(details)="data">
             <a :href = "'/#/sidechain/' + data.item.address"><div class="btn btn-primary">></div></a>
           </template>
@@ -41,7 +41,8 @@ export default {
             name: sidechain.genesis.name + ' (' + sidechain.genesis.symbol + ')',
             address: sidechain.address,
             supply: sidechain.genesis.supply + ' ' + sidechain.genesis.symbol,
-            owner: sidechain.genesis.owner
+            owner: sidechain.genesis.owner,
+            last_24: sidechain.last_24
           }
           sidechains.push(parsed)
         }
@@ -60,6 +61,7 @@ export default {
           'address',
           'supply',
           'owner',
+          {key: 'last_24', label: 'Last 24 txs', sortable: true},
           'details'
         ]
     }

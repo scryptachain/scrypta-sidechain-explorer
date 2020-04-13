@@ -1,9 +1,9 @@
 <template>
-  <div class="container" style="margin-top:40px">
+  <div class="container" style="padding:28vh 15%">
     <div class="row">
       <div class="col-12">
         <h1>Login</h1>
-        <h3>Please enter with your .sid file or use <i>ScryptaID Extension</i>.</h3>
+        <h3>Please enter with your .sid file or<br>use <i>ScryptaID Extension</i>.</h3>
         <hr>
         <b-form-file
           v-model="file"

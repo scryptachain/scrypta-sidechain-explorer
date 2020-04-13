@@ -169,6 +169,9 @@
             </div>
             <div v-if="!user" style="color:#fff; font-size:18px; font-weight:bold; margin-top:15px">
               You must login with your ScryptaID to create a Sidechain.
+              <a href="/#/login"> 
+                <b-button size="sm" class="btn-danger my-2 my-sm-0" style="width: 30%; margin: 0 5px">LOGIN</b-button>
+              </a>
             </div>
           </div>
         </div>
