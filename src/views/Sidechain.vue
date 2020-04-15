@@ -23,26 +23,30 @@
         </div>
 
         <b-table stacked="sm" v-if="showDetails && transactions.unconfirmed.length > 0" striped hover :items="transactions.unconfirmed" :fields="fields">
+          <template v-slot:cell(from)="data">
+            <a :href="'/#/sidechain/'+$route.params.sidechain+'/'+data.item.from" target="_blank">{{ data.item.from }}</a>
+          </template>
+          <template v-slot:cell(to)="data">
+            <a :href="'/#/sidechain/'+$route.params.sidechain+'/'+data.item.to" target="_blank">{{ data.item.to }}</a>
+          </template>
           <template v-slot:cell(details)="data">
             <a :href = "'/#/sxid/' + $route.params.sidechain + '/' + data.item.sxid"><div class="btn btn-primary">></div></a>
           </template>
         </b-table>
         <b-table stacked="sm" v-if="showDetails" striped hover :items="transactions.confirmed" :fields="fields">
+          <template v-slot:cell(from)="data">
+            <a :href="'/#/sidechain/'+$route.params.sidechain+'/'+data.item.from" target="_blank">{{ data.item.from }}</a>
+          </template>
+          <template v-slot:cell(to)="data">
+            <a :href="'/#/sidechain/'+$route.params.sidechain+'/'+data.item.to" target="_blank">{{ data.item.to }}</a>
+          </template>
           <template v-slot:cell(details)="data">
             <a :href = "'/#/sxid/' + $route.params.sidechain + '/' + data.item.sxid"><div class="btn btn-primary">></div></a>
           </template>
         </b-table>
 
-        <b-table stacked="sm" v-if="!showDetails && compacted.unconfirmed.length > 0" striped hover :items="compacted.unconfirmed" :fields="fields">
-          <template v-slot:cell(details)="data">
-            <a :href = "'/#/sxid/' + $route.params.sidechain + '/' + data.item.sxid"><div class="btn btn-primary">></div></a>
-          </template>
-        </b-table>
-        <b-table stacked="sm" v-if="!showDetails" striped hover :items="compacted.confirmed" :fields="fields">
-          <template v-slot:cell(details)="data">
-            <a :href = "'/#/sxid/' + $route.params.sidechain + '/' + data.item.sxid"><div class="btn btn-primary">></div></a>
-          </template>
-        </b-table>
+        <b-table stacked="sm" v-if="!showDetails && compacted.unconfirmed.length > 0" striped hover :items="compacted.unconfirmed" :fields="fields_compacted"></b-table>
+        <b-table stacked="sm" v-if="!showDetails" striped hover :items="compacted.confirmed" :fields="fields_compacted"></b-table>
       </div>
     </div>
     <div class="node-badge" v-if="idanode">{{ idanode }}</div>
@@ -218,6 +222,14 @@ export default {
       series: [],
       showShares: false,
       showDetails: false,
+      fields_compacted: [
+        "sxid",
+        "value",
+        "from",
+        "to",
+        "block",
+        "time"
+      ],
       fields: [
         "sxid",
         "value",
