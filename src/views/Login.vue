@@ -7,7 +7,7 @@
         <hr>
         <b-form-file
           v-model="file"
-          placeholder="Drag and drop a .sid file here o select it from computer"
+          placeholder="Drag and drop a .sid file here or select it from computer"
           @change="loadWalletFromFile"
           class="text-left mb-3 mt-3"
         />
