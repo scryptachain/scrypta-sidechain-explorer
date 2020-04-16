@@ -162,10 +162,6 @@
                 >CREATE ASSET</div>
                 <span v-if="isUploading">Creating asset, please wait..</span>
               </div>
-              <pre
-                v-if="issueResponse"
-                style="font-size:14px; background:#eee; border:1px solid #ccc; border-radius:5px; text-align: left; padding:20px;"
-              >{{ issueResponse }}</pre>
             </div>
             <div v-if="!user" style="color:#fff; font-size:18px; font-weight:bold; margin-top:15px">
               You must login with your ScryptaID to create a Sidechain.
@@ -341,10 +337,9 @@ export default {
                 burnable: app.asset.burnable
               }
             );
-            app.issueResponse = resIssue.data;
             if (
-              app.issueResponse.issued === true ||
-              app.issueResponse.issued === "true"
+              resIssue.data.issued === true ||
+              resIssue.data.issued === "true"
             ) {
               alert("Sidechain created correctly!");
             }
