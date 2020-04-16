@@ -114,6 +114,9 @@ export default {
         .then(response => {
           let shares = response.data.shares
           app.series = []
+          app.options = {
+            labels: []
+          }
           for(let x in shares){
             app.series.push(shares[x].shares)
             app.options.labels.push(x + ' ' + shares[x].balance + ' ' + app.sidechain.symbol)
