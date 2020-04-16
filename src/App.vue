@@ -1,126 +1,256 @@
 <template>
   <div id="app">
-    <b-navbar v-if="showMenu" toggleable="lg" variant="light">
-      <b-navbar-brand href="/#/" style="margin-top:3px">
-        <img src="/img/planum-logo.png" height="22" style="float:left; margin-right:10px;" />
-      </b-navbar-brand>
+    <div v-if="!isLogging && wallet">
+      <b-navbar>
+        <template slot="brand">
+          <b-navbar-item tag="router-link" :to="{ path: '/' }">
+            <img src="/logo.png" />
+          </b-navbar-item>
+        </template>
+        <template slot="start">
+          <b-navbar-item href="/#/">Home</b-navbar-item>
+        </template>
 
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-      <b-collapse id="nav-collapse" is-nav>
-        <b-navbar-nav>
-          <b-nav-item href="/#/explorer">Explorer</b-nav-item>
-          <b-nav-item href="/#/create">Create</b-nav-item>
-          <b-nav-item href="https://wiki.scryptachain.org/developers/sidechain" target="_blank">Docs</b-nav-item>
-        </b-navbar-nav>
-        <b-navbar-nav class="ml-auto">
-          <b-nav-form>
-            <b-form-input
-              size="sm"
-              v-model="address"
-              class="mr-sm-2"
-              placeholder="Search address or sxid"
-            ></b-form-input>
-            <b-button size="sm" v-on:click="searchAssets" class="my-2 my-sm-0">Search</b-button>
-          </b-nav-form>
-          <a href="/#/login" v-if="!user"> 
-            <b-button size="sm" class="btn-success my-2 my-sm-0" style="margin-left:10px">LOGIN</b-button>
-          </a>
-          <a href="#" v-if="user"> 
-            <b-button v-on:click="logout" size="sm" class="btn-danger my-2 my-sm-0" style="margin-left:10px">LOGOUT</b-button>
-          </a>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
-    <router-view />
-    <div v-if="showMenu" style="font-size:11px; text-align:center; padding:4px 0 8px 0">
-      <hr />
-      This is an
+        <template slot="end">
+          <b-navbar-item tag="div">
+            <div class="buttons">
+              <a v-on:click="logout" class="button is-primary">
+                <strong>Logout</strong>
+              </a>
+            </div>
+          </b-navbar-item>
+        </template>
+      </b-navbar>
+      <router-view />
+      <hr />Scrypta dApp Starter
       <a
-        href="https://github.com/scryptachain/scrypta-sidechain-explorer"
-        _target="blank"
-      >Open Source Project</a> by <a href="https://scrypta.foundation" target="_blank">Scrypta Foundation</a>
+        href="https://github.com/scryptachain/scrypta-dapp-starter"
+        target="_blank"
+      >open-source</a> project by
+      <a href="https://scrypta.foundation" target="_blank">Scrypta Foundation</a>.
+      <br />
+      <br />
     </div>
+    <div v-if="!wallet">
+      <section class="hero">
+        <div class="hero-body" style="padding: 0;">
+          <div class="container" id="create" style="margin-top:50px;">
+            <div class="card">
+              <div style="padding: 50px 20px;">
+                <h1 class="title is-1">Start Now</h1>
+                <br />
+                <h2 class="subtitle">
+                  <br />Puoi accedere con Scrypta ID extension o creando una nuova identità
+                  <br />
+                  <br />Accedi con Scrypta ID Extension o <a v-on:click="createUser">crea un nuovo wallet</a>.
+                  <br />
+                  <br />
+                  <b-upload v-model="file" v-on:input="loadWalletFromFile" drag-drop>
+                    <section class="section">
+                      <div class="content has-text-centered">
+                        <p>Trascina il tuo file .sid here or clicca su upload</p>
+                      </div>
+                    </section>
+                  </b-upload>
+                </h2>
+              </div>
+            </div>
+            <br />Scrypta dApp Starter
+            <a
+              href="https://github.com/scryptachain/scrypta-dapp-starter"
+              target="_blank"
+            >open-source</a> project by
+            <a href="https://scrypta.foundation" target="_blank">Scrypta Foundation</a>.
+            <br />
+            <br />
+          </div>
+        </div>
+      </section>
+    </div>
+    <b-loading :is-full-page="true" :active.sync="isLogging" :can-cancel="false"></b-loading>
+    <b-modal :active.sync="showCreateModal" has-modal-card trap-focus aria-role="dialog" aria-modal>
+      <form action>
+        <div class="modal-card" style="width: auto">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Create new Identity</p>
+          </header>
+          <section class="modal-card-body">
+            <b-field label="Insert Password">
+              <b-input
+                type="password"
+                v-model="password"
+                password-reveal
+                placeholder="Your main password"
+                required
+              ></b-input>
+            </b-field>
+
+            <b-field v-if="!wallet" label="Repeat password">
+              <b-input
+                type="password"
+                v-model="passwordrepeat"
+                password-reveal
+                placeholder="Repeat password"
+                required
+              ></b-input>
+            </b-field>
+          </section>
+          <footer v-if="!isCreating && !isUpdating" class="modal-card-foot">
+            <button
+              v-if="!wallet"
+              class="button is-primary"
+              style="width:100%"
+              v-on:click="createUser"
+            >CREATE</button>
+            <button
+              v-if="wallet"
+              class="button is-primary"
+              style="width:100%"
+              v-on:click="updateUser"
+            >UPDATE</button>
+          </footer>
+          <footer v-if="isCreating" class="modal-card-foot">
+            <div style="text-align:center">Creating identity, please wait...</div>
+          </footer>
+        </div>
+      </form>
+    </b-modal>
   </div>
 </template>
-<style>
-.node-badge{
-  background-color: white;
-}
-@media screen and (max-width: 768px){
-  .form-inline .input, .form-inline{width:100%; text-align:center!important;}
-  .navbar-nav .btn, .form-inline .btn {width:100%; margin:5px 0!important;}
-}
-</style>
+
 <script>
+let ScryptaCore = require("@scrypta/core");
+
 export default {
-  name: "home",
   data() {
     return {
-      address: '',
-      axios: window.axios,
-      scrypta: window.ScryptaCore,
-      idanode: "",
-      showMenu: false,
-      user: ""
-    }
+      scrypta: new ScryptaCore(true),
+      address: "",
+      wallet: "",
+      isLogging: true,
+      file: [],
+      isCreating: false,
+      isUpdating: false,
+      showCreateModal: false,
+      password: "",
+      passwordrepeat: ""
+    };
   },
-  mounted: async function() {
+  async mounted() {
     const app = this;
-    app.idanode = await app.scrypta.connectNode();
-    app.checkUser()
-    if(app.$route.path !== '/' && app.$route.path !== '/create'){
-      app.showMenu = true
-    }else{
-      app.showMenu = false
-    }
-  },
-  watch: {
-    $route(to) {
-      const app = this
-      if(to.path !== '/' && to.path !== '/create'){
-        app.showMenu = true
-      }else{
-        app.showMenu = false
-      }
+    app.wallet = await app.scrypta.importBrowserSID();
+    app.wallet = await app.scrypta.returnDefaultIdentity();
+    if (app.wallet.length > 0) {
+      let SIDS = app.wallet.split(":");
+      app.address = SIDS[0];
+      let identity = await app.scrypta.returnIdentity(app.address);
+      app.wallet = identity;
+      app.isLogging = false;
+    } else {
+      app.isLogging = false;
     }
   },
   methods: {
-    async logout() {
+    loadWalletFromFile() {
       const app = this;
-      await app.scrypta.forgetKey();
-      window.location = '/'
-    },
-    async checkUser() {
-      const app = this;
-      let user = await app.scrypta.keyExist();
-      app.public_address = this.scrypta.PubAddress;
-      app.encrypted_wallet = this.scrypta.RAWsAPIKey;
-      if (user.length === 34) {
-        app.user = user;
-      }
-    },
-    async searchAssets() {
-      const app = this
-      if(this.address.length === 34){
-        window.location = '/#/scan/' + this.address
-      }
-      if(this.address.length === 64){
-        app.axios.get(app.idanode + "/sidechain/list").then(async response => {
-        for (let x in response.data.data) {
-          let sidechain = response.data.data[x];
-          let check = await app.axios
-            .post(app.idanode + "/sidechain/transaction", {
-              sidechain_address: sidechain.address,
-              sxid: app.address
-            })
-          if(check.data.transaction !== undefined){
-            window.location = '/#/sxid/' + check.data.transaction.data.transaction.sidechain + '/' + app.address
+      const file = app.file;
+      const reader = new FileReader();
+      reader.onload = function() {
+        var dataKey = reader.result;
+
+        app.$buefy.dialog.prompt({
+          message: `Enter wallet password`,
+          inputAttrs: {
+            type: "password"
+          },
+          trapFocus: true,
+          onConfirm: async password => {
+            let key = await app.scrypta.readKey(password, dataKey);
+            if (key !== false) {
+              app.scrypta.importPrivateKey(key.prv, password);
+              localStorage.setItem("SID", dataKey);
+              location.reload();
+            } else {
+              app.$buefy.toast.open({
+                message: "Wrong password!",
+                type: "is-danger"
+              });
+            }
           }
+        });
+      };
+      reader.readAsText(file);
+    },
+    showCreate() {
+      const app = this;
+      app.showCreateModal = true;
+    },
+    logout() {
+      localStorage.setItem("SID", "");
+      location.reload();
+    },
+    async createUser() {
+      const app = this;
+      if (app.password !== "") {
+        if (app.passwordrepeat === app.password) {
+          app.isCreating = true;
+          setTimeout(async function() {
+            let id = await app.scrypta.createAddress(app.password, true);
+            let identity = await app.scrypta.returnIdentity(id.pub);
+            app.address = id.pub;
+            app.wallet = identity;
+            localStorage.setItem("SID", id.walletstore);
+            app.showCreateModal = false;
+            app.password = "";
+            app.passwordrepeat = "";
+            let tx = await app.scrypta.post("/init", {
+              address: id.pub,
+              airdrop: true
+            });
+            if (tx.airdrop_tx === false) {
+              app.$buefy.toast.open({
+                message: "Sorry, airdrop was not successful!",
+                type: "is-danger"
+              });
+            }
+            app.isCreating = false;
+          }, 500);
+        } else {
+          app.$buefy.toast.open({
+            message: "Passwords doesn't matches.",
+            type: "is-danger"
+          });
         }
-      });
+      } else {
+        app.$buefy.toast.open({
+          message: "Write a password first!",
+          type: "is-danger"
+        });
       }
     }
   }
-}
+};
 </script>
+
+<style>
+  #app {
+    font-family: "Sen";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+  }
+
+  #nav {
+    padding: 30px;
+  }
+
+  #nav a {
+    font-weight: bold;
+    color: #2c3e50;
+  }
+
+  #nav a.router-link-exact-active {
+    color: #42b983;
+  }
+</style>
