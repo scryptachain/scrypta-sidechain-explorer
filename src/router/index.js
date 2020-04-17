@@ -18,6 +18,11 @@ const routes = [
     path: '/',
     name: 'Scan',
     component: () => import('../views/Scan.vue')
+  },
+  {
+    path: '/sidechain/:sidechain',
+    name: 'Sidechain',
+    component: () => import('../views/Sidechain.vue')
   }
 ]
 

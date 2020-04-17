@@ -25,7 +25,7 @@
         </template>
       </b-navbar>
       <router-view />
-      <hr />Scrypta Planum
+      <hr />Scrypta Planum is an
       <a
         href="https://github.com/scryptachain/scrypta-planum-website"
         target="_blank"
@@ -58,7 +58,7 @@
                 </h2>
               </div>
             </div>
-            <br />Scrypta Planum
+            <br />Scrypta Planum is an
             <a
               href="https://github.com/scryptachain/scrypta-planum-website"
               target="_blank"
@@ -196,7 +196,13 @@ export default {
     text-align: center;
     color: #2c3e50;
   }
-
+  .home{
+    padding:20px;
+  }
+  .is-140x140{
+    width:140px;
+    height:140px;
+  }
   #nav {
     padding: 30px;
   }
