@@ -214,7 +214,6 @@
                   app.cap = app.cap - shares[app.$route.params.sidechain].balance
                   app.burned = shares[app.$route.params.sidechain].balance
                 }
-                app.cap = app.cap.toFixed(app.sidechain.decimals)
               })
               app.scrypta.post("/sidechain/scan", {
                 sidechain_address: app.$route.params.sidechain
