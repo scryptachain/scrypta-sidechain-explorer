@@ -1,46 +1,31 @@
 <template>
   <div id="app">
-    <b-navbar>
-      <template slot="brand">
-        <b-navbar-item tag="router-link" :to="{ path: '/' }">
-          <img src="/logo.png" />
-        </b-navbar-item>
-      </template>
-      <template slot="start">
-        <b-navbar-item href="/#/">Explorer</b-navbar-item>
-        <b-navbar-item v-if="wallet" href="/#/create">Create</b-navbar-item>
-        <b-navbar-item href="https://wiki.scryptachain.org/developers/sidechain" target="_blank">Docs</b-navbar-item>
-      </template>
-
-      <template slot="end">
-        <b-navbar-item tag="div" v-if="wallet">
-          <div class="buttons">
-            <a :href="'/#/address/' + address">
-              <v-gravatar :email="address" style="margin-right: 10px; height: 80px;max-height: 37px;float: right;margin-top: -8px;border-radius: 4px;"/>
-            </a>
-            <a v-on:click="logout" class="button is-primary">
-              <strong>Logout</strong>
-            </a>
+      <section class="hero">
+        <div class="hero-body" style="padding: 0;">
+          <div class="container" id="create" style="margin-top:50px;">
+            <div class="card">
+              <div style="padding: 50px 20px;">
+                <h1 class="title is-1">Scrypta Planum</h1>
+                <br />
+                <h2 class="subtitle">
+                  <br />Puoi accedere con Scrypta ID extension o creando una nuova identità
+                  <br />
+                  <br />Accedi con Scrypta ID Extension o trascina un file .sid qui.
+                  <br />
+                  <br />
+                  <b-upload v-model="file" v-on:input="loadWalletFromFile" drag-drop>
+                    <section class="section">
+                      <div class="content has-text-centered">
+                        <p>Trascina il tuo file .sid here or clicca su upload</p>
+                      </div>
+                    </section>
+                  </b-upload>
+                </h2>
+              </div>
+            </div>
           </div>
-        </b-navbar-item>
-        <b-navbar-item tag="div" v-if="!wallet">
-          <div class="buttons">
-            <a href="/#/login" class="button is-primary">
-              <strong>Login</strong>
-            </a>
-          </div>
-        </b-navbar-item>
-      </template>
-    </b-navbar>
-    <router-view />
-    <hr />Scrypta Planum is an
-    <a
-      href="https://github.com/scryptachain/scrypta-planum-website"
-      target="_blank"
-    >open-source</a> project by
-    <a href="https://scrypta.foundation" target="_blank">Scrypta Foundation</a>.
-    <br />
-    <br />
+        </div>
+      </section>
     <b-loading :is-full-page="true" :active.sync="isLogging" :can-cancel="false"></b-loading>
   </div>
 </template>
@@ -96,7 +81,8 @@ export default {
             if (key !== false) {
               app.scrypta.importPrivateKey(key.prv, password);
               localStorage.setItem("SID", dataKey);
-              location.reload();
+              window.location = '/#/'
+              location.reload()
             } else {
               app.$buefy.toast.open({
                 message: "Wrong password!",
@@ -158,32 +144,3 @@ export default {
   }
 };
 </script>
-
-<style>
-  #app {
-    font-family: "Sen";
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-  }
-  .home{
-    padding:20px;
-  }
-  .is-140x140{
-    width:140px;
-    height:140px;
-  }
-  #nav {
-    padding: 30px;
-  }
-
-  #nav a {
-    font-weight: bold;
-    color: #2c3e50;
-  }
-
-  #nav a.router-link-exact-active {
-    color: #42b983;
-  }
-</style>

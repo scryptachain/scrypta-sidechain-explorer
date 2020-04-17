@@ -64,11 +64,10 @@ export default {
       let identity = await app.scrypta.returnIdentity(app.address);
       app.wallet = identity;
       app.isLogging = false;
-      app.fetchSidechains()
     } else {
       app.isLogging = false;
-      window.location = '/#/'
     }
+    app.fetchSidechains()
   },
   methods: {
     fetchSidechains(){
