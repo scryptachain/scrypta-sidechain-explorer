@@ -88,7 +88,7 @@ export default {
   methods: {
     fetchSidechains(){
       const app = this
-      app.scrypta.post('/sidechain/scan/address', { dapp_address: app.address }).then(async response => {
+      app.scrypta.post('/sidechain/scan/address', { dapp_address: app.$route.params.address }).then(async response => {
         let sidechains = []
         for(let x in response.data){
           let sidechain = response.data[x]

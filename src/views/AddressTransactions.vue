@@ -15,6 +15,7 @@
                 <p class="title is-5">{{ sidechain.supply }}</p>
                 <p class="subtitle is-6" style="margin-bottom:0">issued by <b style="color:#000">{{ sidechain.owner }}</b></p>
                 <p class="subtitle is-6" style="margin-bottom:0">CAP: {{ cap }} {{ sidechain.symbol }} - BURNED: {{ burned }} {{ sidechain.symbol }}</p>
+                <p class="subtitle is-6" style="margin-bottom:0">ADDRESS BALANCE: {{ balance }} {{ sidechain.symbol }}</p>
                 <!--<b-button type="is-primary" v-on:click="toggleDetails" style="margin:5px 0;  cursor:pointer;"><span v-if="!showDetails">SHOW</span><span v-if="showDetails">HIDE</span> DETAILS</b-button>-->
               </div>
             </div>
@@ -120,6 +121,7 @@
     data() {
       return {
         scrypta: new ScryptaCore(true),
+        balance: 0,
         transactions: {
           confirmed: [],
           unconfirmed: []
@@ -268,26 +270,27 @@
                       block: Block,
                       time: formattedTime
                     };
-                    let compact = {
-                      sxid: response.data[x].sxid.substr(0,4) + '...' + response.data[x].sxid.substr(-4),
-                      value: value + " " + app.sidechain.symbol,
-                      from: from.substr(0,4) + '...' + from.substr(-4),
-                      to: to.substr(0,4) + '...' + to.substr(-4),
-                      block: Block,
-                      time: formattedTime
-                    };
-                    if(response.data[x].block > 0){
-                      transactions.confirmed.push(transaction);
-                      compacted.confirmed.push(compact);
-                    }else{
-                      transactions.unconfirmed.push(transaction);
-                      compacted.unconfirmed.push(compact);
+                    if(from === app.$route.params.address || to === app.$route.params.address){
+                      if(response.data[x].block > 0){
+                        transactions.confirmed.push(transaction);
+                      }else{
+                        transactions.unconfirmed.push(transaction);
+                      }
                     }
                   }
                 }
                 app.transactions = transactions;
                 app.compacted = compacted;
-                app.isLoading = false
+                
+                app.scrypta.post('/sidechain/scan/address', { dapp_address: app.$route.params.address }).then(async response => {
+                  for(let x in response.data){
+                    let sidechain = response.data[x]
+                    if(app.$route.params.sidechain == sidechain.sidechain){
+                      app.balance = sidechain.balance
+                    }
+                  }
+                  app.isLoading = false
+                })
               });
             }
           }
