@@ -2,35 +2,20 @@
   <div class="home container">
     <div class="columns">
       <div class="column">
-        <h1 style="margin:30px 0">Sidechain details</h1>
         <div class="card">
           <div class="card-content">
             <div class="media">
             <div class="media-left">
-              <figure class="image is-64x64">
-                <v-gravatar :email="sidechain.address" />
-              </figure>
-            </div>
-              <div class="media-content">
-                <p class="title is-4">{{ sidechain.name }}</p>
-                <p class="subtitle is-6" style="margin-bottom:0">issued by <b style="color:#000">{{ sidechain.owner }}</b></p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <h1 style="margin:30px 0">Transaction details</h1>
-        <div class="card">
-          <div class="card-content">
-            <div class="media">
-            <div class="media-left">
-              <figure class="image is-64x64">
+              <figure class="image is-128x128">
                 <v-gravatar :email="transaction.address" />
               </figure>
             </div>
               <div class="media-content">
-                <p class="title is-5" style="margin:0">{{ transaction.address }}</p>
-                <p class="title is-6" style="margin:0">sent {{ amount }} {{ sidechain.symbol }}</p>
-                <p class="title is-6" style="margin:0">to {{ to }}</p>
+                <p class="title is-4" style="margin:0"><a :href="'/address/' + transaction.address">{{ transaction.address }}</a></p>
+                <p class="title is-6" style="margin:0">in the sidechain {{ sidechain.address }}</p>
+                <hr style="margin:10px 0">
+                <p class="title is-6" style="margin:0">Sent {{ amount }} {{ sidechain.symbol }}</p>
+                <p class="title is-6" style="margin:0">To <a :href="'/address/' + to">{{ to }}</a></p>
                 <p class="title is-6" style="margin:0">{{ transaction.data.transaction.time }}</p>
               </div>
             </div>
