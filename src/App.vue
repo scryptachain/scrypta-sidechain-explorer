@@ -10,6 +10,7 @@
         <template slot="start">
           <b-navbar-item href="/#/">Explorer</b-navbar-item>
           <b-navbar-item href="/#/create">Create</b-navbar-item>
+          <b-navbar-item href="https://wiki.scryptachain.org/developers/sidechain" target="_blank">Docs</b-navbar-item>
         </template>
 
         <template slot="end">

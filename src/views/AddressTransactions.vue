@@ -7,11 +7,13 @@
             <div class="media">
             <div class="media-left">
               <figure class="image is-128x128">
-                <v-gravatar :email="sidechain.address" />
+                <a :href="'/#/sidechain/' + sidechain.address">
+                  <v-gravatar :email="sidechain.address" />
+                </a>
               </figure>
             </div>
               <div class="media-content">
-                <p class="title is-4" style="margin:15px 0 0 0">{{ sidechain.name }}</p>
+                <p class="title is-4" style="margin:5px 0 0 0">{{ sidechain.name }}</p>
                 <p class="title is-5">{{ sidechain.supply }}</p>
                 <p class="subtitle is-6" style="margin-bottom:0">issued by <b style="color:#000">{{ sidechain.owner }}</b></p>
                 <p class="subtitle is-6" style="margin-bottom:0">CAP: {{ cap }} {{ sidechain.symbol }} - BURNED: {{ burned }} {{ sidechain.symbol }}</p>
