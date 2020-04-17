@@ -97,7 +97,7 @@
               </b-table-column>
 
               <b-table-column label="Details" style="text-align:center">
-                <a :href="'/transactions/' + $route.params.sidechain + '/' + props.row.sxid"><b-button type="is-primary" size="is-small"> > </b-button></a>
+                <a :href="'/#/transaction/' + $route.params.sidechain + '/' + props.row.sxid"><b-button type="is-primary" size="is-small"> > </b-button></a>
               </b-table-column>
             </template>
           </b-table>
