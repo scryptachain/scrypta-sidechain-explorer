@@ -39,11 +39,13 @@
 
             <template slot-scope="props">
               <b-table-column style="font-size:11px; padding-top:12px" field="from" label="From">
-                <v-gravatar :email="props.row.from" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" /> {{ props.row.from }}
+                <v-gravatar :email="props.row.from" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" /> 
+                <a :href="'/address/' + props.row.from">{{ props.row.from }}</a>
               </b-table-column>
 
               <b-table-column style="font-size:11px; padding-top:12px" field="to" label="To">
-                <v-gravatar :email="props.row.to" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" /> {{ props.row.to }}
+                <v-gravatar :email="props.row.to" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" />
+                <a :href="'/address/' + props.row.to">{{ props.row.to }}</a>
               </b-table-column>
 
               <b-table-column style="font-size:11px; padding-top:12px; text-align:center" field="sxid" label="SXID">
@@ -73,11 +75,13 @@
 
             <template slot-scope="props">
               <b-table-column style="font-size:11px; padding-top:12px" field="from" label="From">
-                <v-gravatar :email="props.row.from" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" /> {{ props.row.from }}
+                <v-gravatar :email="props.row.from" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" /> 
+                <a :href="'/address/' + props.row.from">{{ props.row.from }}</a>
               </b-table-column>
 
               <b-table-column style="font-size:11px; padding-top:12px" field="to" label="To">
-                <v-gravatar :email="props.row.to" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" /> {{ props.row.to }}
+                <v-gravatar :email="props.row.to" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" />
+                <a :href="'/address/' + props.row.to">{{ props.row.to }}</a>
               </b-table-column>
 
               <b-table-column label="Amount">
@@ -192,10 +196,7 @@
                   owner: sidechain.genesis.owner
               };
               app.sidechain = parsed;
-            }
-          }
-        });
-        app.scrypta.post("/sidechain/shares", {
+              app.scrypta.post("/sidechain/shares", {
             sidechain_address: app.$route.params.sidechain
           })
           .then(response => {
@@ -288,6 +289,9 @@
             app.compacted = compacted;
             app.isLoading = false
           });
+            }
+          }
+        });
       }
     }
   };
