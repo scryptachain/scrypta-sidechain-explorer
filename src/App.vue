@@ -10,13 +10,14 @@
         <template slot="start">
           <b-navbar-item href="/#/">Explorer</b-navbar-item>
           <b-navbar-item href="/#/create">Create</b-navbar-item>
-          <b-navbar-item href="/#/scan">Scan</b-navbar-item>
         </template>
 
         <template slot="end">
           <b-navbar-item tag="div">
             <div class="buttons">
-              <v-gravatar :email="address" style="margin-right: 10px; height: 80px;max-height: 37px;float: right;margin-top: -8px;border-radius: 4px;"/>
+              <a :href="'/#/address/' + address">
+                <v-gravatar :email="address" style="margin-right: 10px; height: 80px;max-height: 37px;float: right;margin-top: -8px;border-radius: 4px;"/>
+              </a>
               <a v-on:click="logout" class="button is-primary">
                 <strong>Logout</strong>
               </a>

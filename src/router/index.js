@@ -10,14 +10,14 @@ const routes = [
     component: () => import('../views/Home.vue')
   },
   {
-    path: '/',
+    path: '/create',
     name: 'Create',
     component: () => import('../views/Create.vue')
   },
   {
-    path: '/',
-    name: 'Scan',
-    component: () => import('../views/Scan.vue')
+    path: '/address/:address',
+    name: 'Address',
+    component: () => import('../views/Address.vue')
   },
   {
     path: '/sidechain/:sidechain',
