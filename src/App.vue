@@ -8,12 +8,15 @@
           </b-navbar-item>
         </template>
         <template slot="start">
-          <b-navbar-item href="/#/">Home</b-navbar-item>
+          <b-navbar-item href="/#/">Explorer</b-navbar-item>
+          <b-navbar-item href="/#/create">Create</b-navbar-item>
+          <b-navbar-item href="/#/scan">Scan</b-navbar-item>
         </template>
 
         <template slot="end">
           <b-navbar-item tag="div">
             <div class="buttons">
+              <v-gravatar :email="address" style="margin-right: 10px; height: 80px;max-height: 37px;float: right;margin-top: -8px;border-radius: 4px;"/>
               <a v-on:click="logout" class="button is-primary">
                 <strong>Logout</strong>
               </a>
@@ -22,9 +25,9 @@
         </template>
       </b-navbar>
       <router-view />
-      <hr />Scrypta dApp Starter
+      <hr />Scrypta Planum
       <a
-        href="https://github.com/scryptachain/scrypta-dapp-starter"
+        href="https://github.com/scryptachain/scrypta-planum-website"
         target="_blank"
       >open-source</a> project by
       <a href="https://scrypta.foundation" target="_blank">Scrypta Foundation</a>.
@@ -37,12 +40,12 @@
           <div class="container" id="create" style="margin-top:50px;">
             <div class="card">
               <div style="padding: 50px 20px;">
-                <h1 class="title is-1">Start Now</h1>
+                <h1 class="title is-1">Scrypta Planum</h1>
                 <br />
                 <h2 class="subtitle">
                   <br />Puoi accedere con Scrypta ID extension o creando una nuova identità
                   <br />
-                  <br />Accedi con Scrypta ID Extension o <a v-on:click="createUser">crea un nuovo wallet</a>.
+                  <br />Accedi con Scrypta ID Extension o trascina un file .sid qui.
                   <br />
                   <br />
                   <b-upload v-model="file" v-on:input="loadWalletFromFile" drag-drop>
@@ -55,9 +58,9 @@
                 </h2>
               </div>
             </div>
-            <br />Scrypta dApp Starter
+            <br />Scrypta Planum
             <a
-              href="https://github.com/scryptachain/scrypta-dapp-starter"
+              href="https://github.com/scryptachain/scrypta-planum-website"
               target="_blank"
             >open-source</a> project by
             <a href="https://scrypta.foundation" target="_blank">Scrypta Foundation</a>.
@@ -68,53 +71,6 @@
       </section>
     </div>
     <b-loading :is-full-page="true" :active.sync="isLogging" :can-cancel="false"></b-loading>
-    <b-modal :active.sync="showCreateModal" has-modal-card trap-focus aria-role="dialog" aria-modal>
-      <form action>
-        <div class="modal-card" style="width: auto">
-          <header class="modal-card-head">
-            <p class="modal-card-title">Create new Identity</p>
-          </header>
-          <section class="modal-card-body">
-            <b-field label="Insert Password">
-              <b-input
-                type="password"
-                v-model="password"
-                password-reveal
-                placeholder="Your main password"
-                required
-              ></b-input>
-            </b-field>
-
-            <b-field v-if="!wallet" label="Repeat password">
-              <b-input
-                type="password"
-                v-model="passwordrepeat"
-                password-reveal
-                placeholder="Repeat password"
-                required
-              ></b-input>
-            </b-field>
-          </section>
-          <footer v-if="!isCreating && !isUpdating" class="modal-card-foot">
-            <button
-              v-if="!wallet"
-              class="button is-primary"
-              style="width:100%"
-              v-on:click="createUser"
-            >CREATE</button>
-            <button
-              v-if="wallet"
-              class="button is-primary"
-              style="width:100%"
-              v-on:click="updateUser"
-            >UPDATE</button>
-          </footer>
-          <footer v-if="isCreating" class="modal-card-foot">
-            <div style="text-align:center">Creating identity, please wait...</div>
-          </footer>
-        </div>
-      </form>
-    </b-modal>
   </div>
 </template>
 
