@@ -82,7 +82,6 @@ export default {
       app.fetchSidechains()
     } else {
       app.isLogging = false;
-      window.location = '/#/'
     }
   },
   methods: {

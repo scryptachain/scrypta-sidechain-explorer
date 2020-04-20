@@ -48,6 +48,10 @@
                 <a :href="'/#/address/' + props.row.to">{{ props.row.to }}</a>
               </b-table-column>
 
+              <b-table-column label="Amount">
+                  {{ props.row.value }}
+              </b-table-column>
+              
               <b-table-column style="font-size:11px; padding-top:12px; text-align:center" field="sxid" label="SXID">
                   {{ props.row.sxid.substr(0,12) }}...{{ props.row.sxid.substr(-12) }}
               </b-table-column>
