@@ -6,19 +6,17 @@
           <div class="card-content">
             <div class="media">
             <div class="media-left">
-              <figure class="image is-128x128">
-                <a :href="'/#/sidechain/' + sidechain.address">
-                  <v-gravatar :email="sidechain.address" />
+              <figure class="image is-110x110">
+                <a :href="'#/address/' + $route.params.address">
+                  <v-gravatar :email="$route.params.address" />
                 </a>
               </figure>
             </div>
               <div class="media-content">
-                <p class="title is-4" style="margin:5px 0 0 0">{{ sidechain.name }}</p>
-                <p class="title is-5">{{ sidechain.supply }}</p>
-                <p class="subtitle is-6" style="margin-bottom:0">issued by <b style="color:#000">{{ sidechain.owner }}</b></p>
-                <p class="subtitle is-6" style="margin-bottom:0">CAP: {{ cap }} {{ sidechain.symbol }} - BURNED: {{ burned }} {{ sidechain.symbol }}</p>
-                <p class="subtitle is-6" style="margin-bottom:0">ADDRESS BALANCE: {{ balance }} {{ sidechain.symbol }}</p>
-                <!--<b-button type="is-primary" v-on:click="toggleDetails" style="margin:5px 0;  cursor:pointer;"><span v-if="!showDetails">SHOW</span><span v-if="showDetails">HIDE</span> DETAILS</b-button>-->
+                <p class="title is-4" style="margin:0">{{ $route.params.address }}</p>
+                <p class="title is-5">{{ sidechain.name }}</p>
+                <p class="subtitle is-6" style="margin-bottom:0"><b style="color:#000">{{ sidechain.address }}</b></p>
+                <div style="position:absolute; top:8px; right:0 ;height:80px; padding:30px; text-align:right"><b style="color:#000">Balance</b><br>{{ balance }} {{ sidechain.symbol }}</div>
               </div>
             </div>
           </div>
@@ -43,12 +41,12 @@
             <template slot-scope="props">
               <b-table-column style="font-size:11px; padding-top:12px" field="from" label="From">
                 <v-gravatar :email="props.row.from" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" /> 
-                <a :href="'/#/address/' + props.row.from">{{ props.row.from }}</a>
+                <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.from">{{ props.row.from }}</a>
               </b-table-column>
 
               <b-table-column style="font-size:11px; padding-top:12px" field="to" label="To">
                 <v-gravatar :email="props.row.to" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" />
-                <a :href="'/#/address/' + props.row.to">{{ props.row.to }}</a>
+                <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.to">{{ props.row.to }}</a>
               </b-table-column>
 
               <b-table-column style="font-size:11px; padding-top:12px; text-align:center" field="sxid" label="SXID">
@@ -79,12 +77,12 @@
             <template slot-scope="props">
               <b-table-column style="font-size:11px; padding-top:12px" field="from" label="From">
                 <v-gravatar :email="props.row.from" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" /> 
-                <a :href="'/#/address/' + props.row.from">{{ props.row.from }}</a>
+                <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.from">{{ props.row.from }}</a>
               </b-table-column>
 
               <b-table-column style="font-size:11px; padding-top:12px" field="to" label="To">
                 <v-gravatar :email="props.row.to" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" />
-                <a :href="'/#/address/' + props.row.to">{{ props.row.to }}</a>
+                <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.to">{{ props.row.to }}</a>
               </b-table-column>
 
               <b-table-column label="Amount">

@@ -40,12 +40,12 @@
             <template slot-scope="props">
               <b-table-column style="font-size:11px; padding-top:12px" field="from" label="From">
                 <v-gravatar :email="props.row.from" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" /> 
-                <a :href="'/#/address/' + props.row.from">{{ props.row.from }}</a>
+                <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.from">{{ props.row.from }}</a>
               </b-table-column>
 
               <b-table-column style="font-size:11px; padding-top:12px" field="to" label="To">
                 <v-gravatar :email="props.row.to" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" />
-                <a :href="'/#/address/' + props.row.to">{{ props.row.to }}</a>
+                <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.to">{{ props.row.to }}</a>
               </b-table-column>
 
               <b-table-column label="Amount">
@@ -80,12 +80,12 @@
             <template slot-scope="props">
               <b-table-column style="font-size:11px; padding-top:12px" field="from" label="From">
                 <v-gravatar :email="props.row.from" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" /> 
-                <a :href="'/#/address/' + props.row.from">{{ props.row.from }}</a>
+                <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.from">{{ props.row.from }}</a>
               </b-table-column>
 
               <b-table-column style="font-size:11px; padding-top:12px" field="to" label="To">
                 <v-gravatar :email="props.row.to" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" />
-                <a :href="'/#/address/' + props.row.to">{{ props.row.to }}</a>
+                <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.to">{{ props.row.to }}</a>
               </b-table-column>
 
               <b-table-column label="Amount">
@@ -197,7 +197,8 @@
                   address: sidechain.address,
                   supply: sidechain.genesis.supply + " " + sidechain.genesis.symbol,
                   symbol: sidechain.genesis.symbol,
-                  owner: sidechain.genesis.owner
+                  owner: sidechain.genesis.owner,
+                  decimals: sidechain.genesis.decimals
               };
               app.sidechain = parsed;
               app.scrypta.post("/sidechain/shares", {
@@ -218,6 +219,7 @@
                   app.cap = app.cap - shares[app.$route.params.sidechain].balance
                   app.burned = shares[app.$route.params.sidechain].balance
                 }
+                app.cap = app.cap.toFixed(app.sidechain.decimals)
               })
               app.scrypta.post("/sidechain/scan", {
                 sidechain_address: app.$route.params.sidechain
