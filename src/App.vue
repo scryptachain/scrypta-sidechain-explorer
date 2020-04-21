@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <b-navbar>
+    <b-navbar style="position:fixed; top: 0; left:0; width:100%; border-bottom:1px solid #ddd;">
       <template slot="brand">
         <b-navbar-item tag="router-link" :to="{ path: '/' }">
           <img src="/logo.png" />
@@ -8,8 +8,9 @@
       </template>
       <template slot="start">
         <b-navbar-item href="/#/">Explorer</b-navbar-item>
-        <b-navbar-item v-if="wallet" href="/#/create">Create</b-navbar-item>
         <b-navbar-item href="https://wiki.scryptachain.org/developers/sidechain" target="_blank">Docs</b-navbar-item>
+        <b-navbar-item v-if="wallet" href="/#/create">Create</b-navbar-item>
+        <b-navbar-item v-if="wallet" href="/#/manage">Manage</b-navbar-item>
       </template>
 
       <template slot="end">
@@ -32,7 +33,7 @@
         </b-navbar-item>
       </template>
     </b-navbar>
-    <router-view />
+    <router-view style="padding-top: 80px;" />
     <hr />Scrypta Planum is an
     <a
       href="https://github.com/scryptachain/scrypta-planum-website"

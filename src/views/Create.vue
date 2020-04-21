@@ -107,7 +107,6 @@
   let ScryptaCore = require("@scrypta/core");
   let math = require("mathjs")
 
-
   export default {
     name: "create",
     mounted: async function() {
@@ -226,7 +225,7 @@
               ) {
                 this.$buefy.toast.open({
                     message: 'Asset issued correctly!',
-                    type: 'is-danger'
+                    type: 'is-success'
                 })
                 setTimeout(function(){
                   window.location = '/#/'

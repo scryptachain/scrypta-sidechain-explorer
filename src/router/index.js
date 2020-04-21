@@ -20,6 +20,16 @@ const routes = [
     component: () => import('../views/Login.vue')
   },
   {
+    path: '/manage/:sidechain',
+    name: 'ManageSidechain',
+    component: () => import('../views/ManageSidechain.vue')
+  },
+  {
+    path: '/manage',
+    name: 'Manage',
+    component: () => import('../views/Manage.vue')
+  },
+  {
     path: '/address/:address',
     name: 'Address',
     component: () => import('../views/Address.vue')
