@@ -17,6 +17,7 @@
                 <p class="title is-6" style="margin:0">Sent {{ amount }} {{ sidechain.symbol }}</p>
                 <p class="title is-6" style="margin:0">To <a :href="'/#/address/' + to">{{ to }}</a></p>
                 <p class="title is-6" style="margin:0">{{ transaction.data.transaction.time }}</p>
+                <p class="title is-6" style="margin:0">{{ transaction.data.sxid }}</p>
               </div>
             </div>
           </div>

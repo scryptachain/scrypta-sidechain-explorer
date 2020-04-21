@@ -6,17 +6,14 @@
             <div class="card">
               <div style="padding: 50px 20px;">
                 <h1 class="title is-1">Scrypta Planum</h1>
-                <br />
                 <h2 class="subtitle">
-                  <br />Puoi accedere con Scrypta ID extension o creando una nuova identità
-                  <br />
-                  <br />Accedi con Scrypta ID Extension o trascina un file .sid qui.
+                  <br />Enter with Scrypta ID Extension or create a <a href="https://web.manent.app" target="_blank">new account here</a>.
                   <br />
                   <br />
                   <b-upload v-model="file" v-on:input="loadWalletFromFile" drag-drop>
                     <section class="section">
                       <div class="content has-text-centered">
-                        <p>Trascina il tuo file .sid here or clicca su upload</p>
+                        <p>Drag and drop here or click to upload</p>
                       </div>
                     </section>
                   </b-upload>
