@@ -1,106 +1,165 @@
 <template>
-  <div class="home" style="margin-top:30px">
-    <div class>
-      <div class="col-12">
-        <h3>
-          {{ sidechain.name }}
-          <br />
-          <span style="font-size:13px">{{ $route.params.sidechain }}</span>
-          <br />
-          <i style="font-size:11px">{{ $route.params.sxid }}</i>
-        </h3>
-      </div>
-      <div class="col-md-6 offset-md-3">
-        <pre
-          style="font-size:14px; background:#eee; border:1px solid #ccc; border-radius:5px; text-align: left; padding:20px;"
-        >{{ transaction }}</pre>
-        <br />
-        <a :href="'https://proof.scryptachain.org/#/uuid/' + transaction.uuid" target="_blank">
-          <div class="btn btn-success">SHOW PROOF OF EXISTENCE</div>
-        </a>
-        <br />
-        <br />
+  <div class="home container">
+    <div class="columns">
+      <div class="column">
+        <div class="card">
+          <div class="card-content">
+            <div class="media">
+            <div class="media-left">
+              <figure class="image is-128x128">
+                <v-gravatar :email="transaction.address" />
+              </figure>
+            </div>
+              <div class="media-content">
+                <p class="title is-4" style="margin:0"><a :href="'/#/address/' + transaction.address">{{ transaction.address }}</a></p>
+                <p class="title is-6" style="margin:0">in the sidechain <a :href="'/#/sidechain/' + sidechain.address">{{ sidechain.address }}</a></p>
+                <hr style="margin:10px 0">
+                <p class="title is-6" style="margin:0">Sent {{ amount }} {{ sidechain.symbol }}</p>
+                <p class="title is-6" style="margin:0">To <a :href="'/#/address/' + to">{{ to }}</a></p>
+                <p class="title is-6" style="margin:0">{{ transaction.data.transaction.time }}</p>
+                <p class="title is-6" style="margin:0">{{ transaction.data.sxid }}</p>
+              </div>
+            </div>
+          </div>
+        </div><br><br>
+        <div class="columns">
+          <div class="column" style="text-align:left">
+            <b>Inputs</b><br><br>
+            <div v-for="input in transaction.data.transaction.inputs" v-bind:key="input.sxid">
+              <a :href="'/#/transaction/' + sidechain.address + '/' + input.sxid" target="_blank">
+                <div class="card">
+                  <div class="card-content">
+                    <div class="media">
+                    <div class="media-left">
+                      <figure class="image is-32x32">
+                        <v-gravatar :email="input.sxid" style="margin-top:-6px" />
+                      </figure>
+                    </div>
+                      <div class="media-content">
+                        <p class="title is-6" style="margin:0">
+                          {{ input.sxid.substr(0,6) }}...{{ input.sxid.substr(-6) }} > <b>{{ input.amount }} {{ sidechain.symbol }}</b>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="column">
+            <b>Outputs</b><br><br>
+            <div v-for="(amount, address) in transaction.data.transaction.outputs" v-bind:key="address">
+              <div class="card">
+                <div class="card-content">
+                  <div class="media">
+                  <div class="media-left">
+                    <figure class="image is-32x32">
+                      <v-gravatar :email="address"  style="margin-top:-6px" />
+                    </figure>
+                  </div>
+                    <div class="media-content">
+                      <p class="title is-6" style="margin:0">
+                        {{ address }} > <b>{{ amount }} {{ sidechain.symbol }}</b>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="transaction.data.transaction.memo">
+          <div class="columns">
+            <div class="column" style="text-align:left">
+              <div class="card">
+                <div class="card-content">
+                  <h1 class="title is-4">Memo field:</h1>
+                  {{ transaction.data.transaction.memo }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="node-badge" v-if="idanode">{{ idanode }}</div>
+    <b-loading :is-full-page="true" :active.sync="isLoading" :can-cancel="false"></b-loading>
   </div>
 </template>
 
-<style>
-#app {
-  text-align: center;
-  font-family: "karmillaregular";
-  font-size: 13px;
-}
-</style>
-
 <script>
-export default {
-  name: "home",
-  mounted: async function() {
-    const app = this;
-    app.idanode = await app.scrypta.connectNode();
-    app.fetchSidechain();
-  },
-  methods: {
-    fetchSidechain() {
-      const app = this;
-      app.axios.get(app.idanode + "/sidechain/list").then(response => {
-        for (let x in response.data.data) {
-          let sidechain = response.data.data[x];
-          if (sidechain.address === app.$route.params.sidechain) {
-            let parsed = {
-              name:
-                sidechain.genesis.name + " (" + sidechain.genesis.symbol + ")",
-              address: sidechain.address,
-              supply: sidechain.genesis.supply + " " + sidechain.genesis.symbol,
-              symbol: sidechain.genesis.symbol,
-              owner: sidechain.genesis.owner
-            };
-            app.sidechain = parsed;
-          }
-        }
-      });
-      app.axios
-        .post(app.idanode + "/sidechain/transaction", {
-          sidechain_address: app.$route.params.sidechain,
-          sxid: app.$route.params.sxid
-        })
-        .then(response => {
-          app.transaction = response.data.transaction;
-        });
-    }
-  },
-  data() {
-    return {
-      scrypta: window.ScryptaCore,
-      axios: window.axios,
-      idanode: "",
-      transaction: { uuid: "" },
-      sidechain: [],
-      fields: [
-        "sxid",
-        "value",
-        "from",
-        "to",
-        { key: "block", sortable: true },
-        "details"
-      ]
-    };
-  }
-};
-</script>
+  let ScryptaCore = require("@scrypta/core");
 
-<style>
-.node-badge {
-  position: fixed;
-  bottom: -3px;
-  font-size: 10px;
-  padding: 8px;
-  right: 10px;
-  z-index: 9999;
-  border: 1px solid #ccc;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-}
-</style>
+  export default {
+    name: "home",
+    data() {
+      return {
+        scrypta: new ScryptaCore(true),
+        transaction: {
+          data: {
+            transaction: {
+              inputs: [],
+              outputs: {}
+            }
+          }
+        },
+        sidechain: [],
+        isLoading: true,
+        to: '',
+        amount: 0
+      };
+    },
+    mounted: async function() {
+      const app = this;
+      app.fetchTransaction()
+    },
+    methods: {
+      fetchTransaction() {
+        const app = this;
+        app.scrypta.get("/sidechain/list").then(response => {
+          for (let x in response.data) {
+            let sidechain = response.data[x];
+            if (sidechain.address === app.$route.params.sidechain) {
+              let parsed = {
+                name:
+                  sidechain.genesis.name + " (" + sidechain.genesis.symbol + ")",
+                  address: sidechain.address,
+                  supply: sidechain.genesis.supply + " " + sidechain.genesis.symbol,
+                  symbol: sidechain.genesis.symbol,
+                  owner: sidechain.genesis.owner
+              };
+              app.sidechain = parsed;
+              app.scrypta.post("/sidechain/transaction", {
+                sidechain_address: app.$route.params.sidechain,
+                sxid: app.$route.params.sxid
+              })
+              .then(response => {
+                app.transaction = response.transaction;
+                
+                for(let x in app.transaction.data.transaction.outputs){
+                  if(x !== app.transaction.address){
+                    app.to = x
+                    app.amount = app.transaction.data.transaction.outputs[x]
+                  }
+                }
+                if(app.to === ''){
+                  for(let x in app.transaction.data.transaction.outputs){
+                    app.to = x
+                    app.amount = app.transaction.data.transaction.outputs[x]
+                  }
+                }
+                let date = new Date(app.transaction.data.transaction.time)
+                let year = date.getFullYear()
+                let month = date.getMonth() + 1
+                let day = date.getDate()
+                let hours = date.getHours()
+                let minutes = "0" + date.getMinutes()
+                app.transaction.data.transaction.time = day + '/' + month + '/' + year +' at ' + hours + ':' + minutes.substr(-2)
+                app.isLoading = false
+              });
+            }
+          }
+        })
+      }
+    }
+  };
+</script>

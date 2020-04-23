@@ -1,82 +1,143 @@
 <template>
-  <div class="container" style="padding:28vh 15%">
-    <div class="row">
-      <div class="col-12">
-        <h1>Login</h1>
-        <h3>Please enter with your .sid file or<br>use <i>ScryptaID Extension</i>.</h3>
-        <hr>
-        <b-form-file
-          v-model="file"
-          placeholder="Drag and drop a .sid file here or select it from computer"
-          @change="loadWalletFromFile"
-          class="text-left mb-3 mt-3"
-        />
-      </div>
-    </div>
-    <div class="node-badge" v-if="connected">{{ connected }}</div>
+  <div id="app">
+      <section class="hero">
+        <div class="hero-body" style="padding: 0;">
+          <div class="container" id="create" style="margin-top:50px;">
+            <div class="card">
+              <div style="padding: 50px 20px;">
+                <h1 class="title is-1">Scrypta Planum</h1>
+                <h2 class="subtitle">
+                  <br />Enter with Scrypta ID Extension or create a <a href="https://web.manent.app" target="_blank">new account here</a>.
+                  <br />
+                  <br />
+                  <b-upload v-model="file" v-on:input="loadWalletFromFile" drag-drop>
+                    <section class="section">
+                      <div class="content has-text-centered">
+                        <p>Drag and drop here or click to upload</p>
+                      </div>
+                    </section>
+                  </b-upload>
+                </h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    <b-loading :is-full-page="true" :active.sync="isLogging" :can-cancel="false"></b-loading>
   </div>
 </template>
 
-
 <script>
+let ScryptaCore = require("@scrypta/core");
 
 export default {
-  name: 'home',
-  mounted : function(){
-    this.checkIdaNodes()
+  data() {
+    return {
+      scrypta: new ScryptaCore(true),
+      address: "",
+      wallet: "",
+      isLogging: true,
+      file: [],
+      isCreating: false,
+      isUpdating: false,
+      showCreateModal: false,
+      password: "",
+      passwordrepeat: ""
+    };
+  },
+  async mounted() {
+    const app = this;
+    app.wallet = await app.scrypta.importBrowserSID();
+    app.wallet = await app.scrypta.returnDefaultIdentity();
+    if (app.wallet.length > 0) {
+      let SIDS = app.wallet.split(":");
+      app.address = SIDS[0];
+      let identity = await app.scrypta.returnIdentity(app.address);
+      app.wallet = identity;
+      app.isLogging = false;
+    } else {
+      app.isLogging = false;
+    }
   },
   methods: {
-      async checkUser(){
-        const app = this
-        let user = await app.scrypta.keyExist()
-        if(user.length === 34){
-          window.location='/#/create'
-        }
-      },
-      async checkIdaNodes(){
-        var checknodes = this.scrypta.returnNodes()
-        const app = this
-        for(var i = 0; i < checknodes.length; i++){
-          this.axios.get(checknodes[i] + '/wallet/getinfo').then(
-            check => {
-              if(check.data.blocks !== undefined){
-                if(app.connected === ''){
-                  app.connected = check.config.url.replace('/wallet/getinfo','')
-                  app.checkUser()
-                }
-              }
+    loadWalletFromFile() {
+      const app = this;
+      const file = app.file;
+      const reader = new FileReader();
+      reader.onload = function() {
+        var dataKey = reader.result;
+
+        app.$buefy.dialog.prompt({
+          message: `Enter wallet password`,
+          inputAttrs: {
+            type: "password"
+          },
+          trapFocus: true,
+          onConfirm: async password => {
+            let key = await app.scrypta.readKey(password, dataKey);
+            if (key !== false) {
+              app.scrypta.importPrivateKey(key.prv, password);
+              localStorage.setItem("SID", dataKey);
+              window.location = '/#/'
+              location.reload()
+            } else {
+              app.$buefy.toast.open({
+                message: "Wrong password!",
+                type: "is-danger"
+              });
             }
-          )
-        }
-      },
-      loadWalletFromFile(ev) {
-        const file = ev.target.files[0];
-        const reader = new FileReader();
-        var app = this;
-        reader.onload = function() {
-          var dataKey = reader.result;
-          app.scrypta.saveKey(dataKey).then(function() {
-            location.reload()
+          }
+        });
+      };
+      reader.readAsText(file);
+    },
+    showCreate() {
+      const app = this;
+      app.showCreateModal = true;
+    },
+    logout() {
+      localStorage.setItem("SID", "");
+      location.reload();
+    },
+    async createUser() {
+      const app = this;
+      if (app.password !== "") {
+        if (app.passwordrepeat === app.password) {
+          app.isCreating = true;
+          setTimeout(async function() {
+            let id = await app.scrypta.createAddress(app.password, true);
+            let identity = await app.scrypta.returnIdentity(id.pub);
+            app.address = id.pub;
+            app.wallet = identity;
+            localStorage.setItem("SID", id.walletstore);
+            app.showCreateModal = false;
+            app.password = "";
+            app.passwordrepeat = "";
+            let tx = await app.scrypta.post("/init", {
+              address: id.pub,
+              airdrop: true
+            });
+            if (tx.airdrop_tx === false) {
+              app.$buefy.toast.open({
+                message: "Sorry, airdrop was not successful!",
+                type: "is-danger"
+              });
+            }
+            app.isCreating = false;
+          }, 500);
+        } else {
+          app.$buefy.toast.open({
+            message: "Passwords doesn't matches.",
+            type: "is-danger"
           });
-        };
-        reader.readAsText(file);
+        }
+      } else {
+        app.$buefy.toast.open({
+          message: "Write a password first!",
+          type: "is-danger"
+        });
       }
-  },
-  data () {
-    return {
-      scrypta: window.ScryptaCore,
-      axios: window.axios,
-      nodes: [],
-      connected: '',
-      isLoading: true,
-      file: []
     }
   }
-}
+};
 </script>
-
-<style>
-  .node-badge{
-    position:fixed; bottom:-3px; font-size:10px; padding:8px; right:10px; z-index:9999;
-  }
-</style>

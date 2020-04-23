@@ -2,9 +2,24 @@
   <div class="home container">
     <div class="columns">
       <div class="column">
-        <b-input v-model="searcher" placeholder="Search for a sidechain.." style="margin-bottom:15px"></b-input>
-        <div v-for="sidechain in filteredList" v-bind:key="sidechain.address" style="margin-bottom:15px">
-          <a :href="'/#/sidechain/' + sidechain.address">
+        <div class="card">
+          <div class="card-content">
+            <div class="media">
+            <div class="media-left">
+              <figure class="image is-64x64">
+                <v-gravatar :email="$route.params.address" />
+              </figure>
+            </div>
+              <div class="media-content">
+                <p class="title is-4" style="margin:0 0 0 0">Assets owned by</p>
+                <p class="title is-6" style="margin:15px 0 0 0">{{ $route.params.address }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div v-for="sidechain in sidechains" v-bind:key="sidechain.address" style="margin-bottom:15px">
+          <a :href="'/#/sidechain/' + sidechain.address + '/' + $route.params.address">
             <div class="card">
               <div class="card-content">
                 <div class="media">
@@ -15,14 +30,9 @@
                 </div>
                   <div class="media-content">
                     <p class="title is-4" style="margin:0">{{ sidechain.name }}</p>
-                    <p class="title is-5">{{ sidechain.last_24 }} txs in the last 24h</p>
+                    <p class="title is-5">{{ sidechain.supply }}</p>
                     <p class="subtitle is-6" style="margin-bottom:0">issued by <b style="color:#000">{{ sidechain.owner }}</b></p>
-                    <b-icon
-                        style="position:absolute; top:45px; right:30px"
-                        pack="fas"
-                        icon="arrow-right"
-                        size="is-medium">
-                    </b-icon>
+                    <div style="position:absolute; top:8px; right:0 ;height:80px; padding:30px; text-align:right"><b style="color:#000">Balance</b><br>{{ sidechain.balance }} {{ sidechain.symbol }}</div>
                   </div>
                 </div>
               </div>
@@ -69,24 +79,26 @@ export default {
       let identity = await app.scrypta.returnIdentity(app.address);
       app.wallet = identity;
       app.isLogging = false;
+      app.fetchSidechains()
     } else {
       app.isLogging = false;
     }
-    app.fetchSidechains()
   },
   methods: {
     fetchSidechains(){
       const app = this
-      app.scrypta.get('/sidechain/list').then(response => {
+      app.scrypta.post('/sidechain/scan/address', { dapp_address: app.$route.params.address }).then(async response => {
         let sidechains = []
         for(let x in response.data){
           let sidechain = response.data[x]
+          let details = await app.scrypta.post('/sidechain/get', {sidechain_address: sidechain.sidechain })
           let parsed = {
-            name: sidechain.genesis.name + ' (' + sidechain.genesis.symbol + ')',
-            address: sidechain.address,
-            supply: sidechain.genesis.supply + ' ' + sidechain.genesis.symbol,
-            owner: sidechain.genesis.owner,
-            last_24: sidechain.last_24
+            name: details.sidechain[0].data.genesis.name + ' (' + details.sidechain[0].data.genesis.symbol + ')',
+            address: details.sidechain[0].address,
+            symbol: details.sidechain[0].data.genesis.symbol,
+            supply: details.sidechain[0].data.genesis.supply + ' ' + details.sidechain[0].data.genesis.symbol,
+            owner: details.sidechain[0].data.genesis.owner,
+            balance: sidechain.balance
           }
           sidechains.push(parsed)
         }
