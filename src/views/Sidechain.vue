@@ -12,7 +12,7 @@
             </div>
               <div class="media-content">
                 <p class="title is-4" style="margin:15px 0 0 0">{{ sidechain.name }}</p>
-                <p class="title is-5">{{ sidechain.supply }}</p>
+                <p class="title is-5">{{ totalSupply }} {{ sidechain.symbol }}</p>
                 <p class="subtitle is-6" style="margin-bottom:0">issued by <b style="color:#000">{{ sidechain.owner }}</b></p>
                 <p class="subtitle is-6" style="margin-bottom:0">CAP: {{ cap }} {{ sidechain.symbol }} - BURNED: {{ burned }} {{ sidechain.symbol }}</p>
                 <!--<b-button type="is-primary" v-on:click="toggleDetails" style="margin:5px 0;  cursor:pointer;"><span v-if="!showDetails">SHOW</span><span v-if="showDetails">HIDE</span> DETAILS</b-button>-->
@@ -20,96 +20,120 @@
             </div>
           </div>
         </div>
-        <div v-if="!showDetails">
-          <b-table
-            v-if="transactions.unconfirmed.length > 0"
-            :data="transactions.unconfirmed"
-            :paginated="false"
-            :per-page="perPage"
-            :current-page.sync="currentPage"
-            :pagination-simple="isPaginationSimple"
-            :pagination-position="paginationPosition"
-            :default-sort-direction="defaultSortDirection"
-            :sort-icon="sortIcon"
-            :sort-icon-size="sortIconSize"
-            aria-next-label="Next page"
-            aria-previous-label="Previous page"
-            aria-page-label="Page"
-            aria-current-label="Current page">
+        <b-tabs v-model="activeTab" :animated="false">
+            <b-tab-item label="Transactions">
+              <b-table
+                v-if="transactions.unconfirmed.length > 0"
+                :data="transactions.unconfirmed"
+                :paginated="false"
+                :per-page="perPage"
+                :current-page.sync="currentPage"
+                :pagination-simple="isPaginationSimple"
+                :pagination-position="paginationPosition"
+                :default-sort-direction="defaultSortDirection"
+                :sort-icon="sortIcon"
+                :sort-icon-size="sortIconSize"
+                aria-next-label="Next page"
+                aria-previous-label="Previous page"
+                aria-page-label="Page"
+                aria-current-label="Current page">
 
-            <template slot-scope="props">
-              <b-table-column style="font-size:11px; padding-top:12px" field="from" label="From">
-                <v-gravatar :email="props.row.from" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" /> 
-                <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.from">{{ props.row.from }}</a>
-              </b-table-column>
+                <template slot-scope="props">
+                  <b-table-column style="font-size:11px; padding-top:12px" field="from" label="From">
+                    <v-gravatar :email="props.row.from" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" /> 
+                    <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.from">{{ props.row.from }}</a>
+                  </b-table-column>
 
-              <b-table-column style="font-size:11px; padding-top:12px" field="to" label="To">
-                <v-gravatar :email="props.row.to" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" />
-                <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.to">{{ props.row.to }}</a>
-              </b-table-column>
+                  <b-table-column style="font-size:11px; padding-top:12px" field="to" label="To">
+                    <v-gravatar :email="props.row.to" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" />
+                    <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.to">{{ props.row.to }}</a>
+                  </b-table-column>
 
-              <b-table-column label="Amount">
-                  {{ props.row.value }}
-              </b-table-column>
-              
-              <b-table-column style="font-size:11px; padding-top:12px; text-align:center" field="sxid" label="SXID">
-                  {{ props.row.sxid.substr(0,12) }}...{{ props.row.sxid.substr(-12) }}
-              </b-table-column>
+                  <b-table-column label="Amount">
+                      {{ props.row.value }}
+                  </b-table-column>
+                  
+                  <b-table-column style="font-size:11px; padding-top:12px; text-align:center" field="sxid" label="SXID">
+                      {{ props.row.sxid.substr(0,12) }}...{{ props.row.sxid.substr(-12) }}
+                  </b-table-column>
 
-              <b-table-column label="Datetime" style="text-align:center">
-                  {{ props.row.time }}
-              </b-table-column>
-            </template>
-          </b-table>
-          <b-table
-            v-if="transactions.confirmed.length > 0"
-            :data="transactions.confirmed"
-            :paginated="isPaginated"
-            :per-page="perPage"
-            :current-page.sync="currentPage"
-            :pagination-simple="isPaginationSimple"
-            :pagination-position="paginationPosition"
-            :default-sort-direction="defaultSortDirection"
-            :sort-icon="sortIcon"
-            :sort-icon-size="sortIconSize"
-            aria-next-label="Next page"
-            aria-previous-label="Previous page"
-            aria-page-label="Page"
-            aria-current-label="Current page">
+                  <b-table-column label="Datetime" style="text-align:center">
+                      {{ props.row.time }}
+                  </b-table-column>
+                </template>
+              </b-table>
+              <b-table
+                v-if="transactions.confirmed.length > 0"
+                :data="transactions.confirmed"
+                :paginated="isPaginated"
+                :per-page="perPage"
+                :current-page.sync="currentPage"
+                :pagination-simple="isPaginationSimple"
+                :pagination-position="paginationPosition"
+                :default-sort-direction="defaultSortDirection"
+                :sort-icon="sortIcon"
+                :sort-icon-size="sortIconSize"
+                aria-next-label="Next page"
+                aria-previous-label="Previous page"
+                aria-page-label="Page"
+                aria-current-label="Current page">
 
-            <template slot-scope="props">
-              <b-table-column style="font-size:11px; padding-top:12px" field="from" label="From">
-                <v-gravatar :email="props.row.from" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" /> 
-                <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.from">{{ props.row.from }}</a>
-              </b-table-column>
+                <template slot-scope="props">
+                  <b-table-column style="font-size:11px; padding-top:12px" field="from" label="From">
+                    <v-gravatar :email="props.row.from" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" /> 
+                    <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.from">{{ props.row.from }}</a>
+                  </b-table-column>
 
-              <b-table-column style="font-size:11px; padding-top:12px" field="to" label="To">
-                <v-gravatar :email="props.row.to" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" />
-                <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.to">{{ props.row.to }}</a>
-              </b-table-column>
+                  <b-table-column style="font-size:11px; padding-top:12px" field="to" label="To">
+                    <v-gravatar :email="props.row.to" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" />
+                    <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.to">{{ props.row.to }}</a>
+                  </b-table-column>
 
-              <b-table-column label="Amount">
-                  {{ props.row.value }}
-              </b-table-column>
+                  <b-table-column label="Amount">
+                      {{ props.row.value }}
+                  </b-table-column>
 
-              <b-table-column style="font-size:11px; padding-top:12px; text-align:center" field="sxid" label="SXID">
-                  {{ props.row.sxid.substr(0,12) }}...{{ props.row.sxid.substr(-12) }}
-              </b-table-column>
+                  <b-table-column style="font-size:11px; padding-top:12px; text-align:center" field="sxid" label="SXID">
+                      {{ props.row.sxid.substr(0,12) }}...{{ props.row.sxid.substr(-12) }}
+                  </b-table-column>
 
-              <b-table-column label="Datetime" style="text-align:center">
-                  {{ props.row.time }}
-              </b-table-column>
+                  <b-table-column label="Datetime" style="text-align:center">
+                      {{ props.row.time }}
+                  </b-table-column>
 
-              <b-table-column label="Block" style="text-align:center">
-                  {{ props.row.block }}
-              </b-table-column>
+                  <b-table-column label="Block" style="text-align:center">
+                      {{ props.row.block }}
+                  </b-table-column>
 
-              <b-table-column label="Details" style="text-align:center">
-                <a :href="'/#/transaction/' + $route.params.sidechain + '/' + props.row.sxid"><b-button type="is-primary" size="is-small"> > </b-button></a>
-              </b-table-column>
-            </template>
-          </b-table>
-        </div>
+                  <b-table-column label="Details" style="text-align:center">
+                    <a :href="'/#/transaction/' + $route.params.sidechain + '/' + props.row.sxid"><b-button type="is-primary" size="is-small"> > </b-button></a>
+                  </b-table-column>
+                </template>
+              </b-table>
+            </b-tab-item>
+
+            <b-tab-item label="Shares list">
+              <div v-for="address in shares" v-bind:key="address.address" style="width:50%; display:inline-block; float:left;">
+                <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + address.address">
+                  <div class="card">
+                    <div class="card-content">
+                      <div class="media">
+                      <div class="media-left">
+                        <figure class="image is-32x32">
+                          <v-gravatar :email="address.address" />
+                        </figure>
+                      </div>
+                        <div class="media-content">
+                          <p class="title is-6" style="margin:0">{{ address.address }}</p>
+                          <p>{{ address.balance }} ({{ address.shares }}%)</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </b-tab-item>
+        </b-tabs>
       </div>
     </div>
     <b-loading :is-full-page="true" :active.sync="isLoading" :can-cancel="false"></b-loading>
@@ -133,12 +157,14 @@
           unconfirmed: []
         },
         sidechain: [],
+        shares: [],
         burned: 0,
         cap: 0,
         options: {
           labels: []
         },
         series: [],
+        totalSupply: "-",
         showShares: false,
         showDetails: false,
         isLoading: true,
@@ -158,7 +184,13 @@
           "block",
           "time",
           "details"
-        ]
+        ],
+        sharesColumns: [
+          "address",
+          "balance",
+          "shares"
+        ],
+        activeTab: 0
       };
     },
     mounted: async function() {
@@ -207,12 +239,22 @@
               .then(response => {
                 let shares = response.shares
                 app.series = []
+                app.shares = []
+                app.totalSupply = response.cap
                 app.options = {
                   labels: []
                 }
                 for(let x in shares){
                   app.series.push(shares[x].shares)
                   app.options.labels.push(x + ' ' + shares[x].balance + ' ' + app.sidechain.symbol)
+                  let details = {
+                    address: x,
+                    balance: shares[x].balance + ' ' + app.sidechain.symbol,
+                    shares: shares[x].shares
+                  }
+                  if(app.shares.indexOf(details) === -1){
+                    app.shares.push(details)
+                  }
                 }
                 app.cap = response.cap
                 if(shares[app.$route.params.sidechain] !== undefined){

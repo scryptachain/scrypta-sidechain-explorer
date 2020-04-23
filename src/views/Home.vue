@@ -15,9 +15,14 @@
                 </div>
                   <div class="media-content">
                     <p class="title is-4" style="margin:0">{{ sidechain.name }}</p>
-                    <p class="title is-5">{{ sidechain.supply }}</p>
+                    <p class="title is-5">{{ sidechain.last_24 }} txs in the last 24h</p>
                     <p class="subtitle is-6" style="margin-bottom:0">issued by <b style="color:#000">{{ sidechain.owner }}</b></p>
-                    <div style="position:absolute; top:0; right:0 ;height:80px; padding:30px; text-align:center"><b>Last 24h txs</b><br>{{ sidechain.last_24 }}</div>
+                    <b-icon
+                        style="position:absolute; top:45px; right:30px"
+                        pack="fas"
+                        icon="arrow-right"
+                        size="is-medium">
+                    </b-icon>
                   </div>
                 </div>
               </div>
