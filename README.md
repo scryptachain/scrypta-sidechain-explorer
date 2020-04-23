@@ -1,26 +1,11 @@
-# Scrypta Blockchain VueJS Starter
+# Scrypta Planum Explorer and Manager
 
-## Project setup
-```
-npm install
-```
+With this project you'll be able to create and manage sidechains and explore all the transactions, addresses and sidechains.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+It's a VueJS project so you can easily use it as usual:
 
-### Compiles and minifies for production
-```
-npm run build
-```
+`npm install`: Install all dependencies
 
-### Run your tests
-```
-npm run test
-```
+`npm run serve`: Work with local enviorment
 
-### Lints and fixes files
-```
-npm run lint
-```
+`npm run build`: Build project and publish it into your server
