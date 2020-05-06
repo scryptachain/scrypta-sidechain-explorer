@@ -1,7 +1,7 @@
 <template>
   <div class="home container">
     <div class="columns">
-      <div class="column">
+      <div v-if="!isLoading" class="column">
         <div class="card">
           <div class="card-content">
             <div class="media">
@@ -16,8 +16,8 @@
                 <hr style="margin:10px 0">
                 <p class="title is-6" style="margin:0">Sent {{ amount }} {{ sidechain.symbol }}</p>
                 <p class="title is-6" style="margin:0">To <a :href="'/#/address/' + to">{{ to }}</a></p>
-                <p class="title is-6" style="margin:0">{{ transaction.data.transaction.time }}</p>
-                <p class="title is-6" style="margin:0">{{ transaction.data.sxid }}</p>
+                <p class="title is-6" style="margin:0">{{ transaction.transaction.time }} at block {{ transaction.block }}</p>
+                <p class="title is-6" style="margin:0">SXID: {{ transaction.sxid }}</p>
               </div>
             </div>
           </div>
@@ -25,14 +25,14 @@
         <div class="columns">
           <div class="column" style="text-align:left">
             <b>Inputs</b><br><br>
-            <div v-for="input in transaction.data.transaction.inputs" v-bind:key="input.sxid">
+            <div v-for="input in transaction.transaction.inputs" v-bind:key="input.sxid">
               <a :href="'/#/transaction/' + sidechain.address + '/' + input.sxid" target="_blank">
                 <div class="card">
                   <div class="card-content">
                     <div class="media">
                     <div class="media-left">
                       <figure class="image is-32x32">
-                        <v-gravatar :email="input.sxid" style="margin-top:-6px" />
+                        <v-gravatar :email="transaction.address" style="margin-top:-6px" />
                       </figure>
                     </div>
                       <div class="media-content">
@@ -48,7 +48,7 @@
           </div>
           <div class="column">
             <b>Outputs</b><br><br>
-            <div v-for="(amount, address) in transaction.data.transaction.outputs" v-bind:key="address">
+            <div v-for="(amount, address) in transaction.transaction.outputs" v-bind:key="address">
               <div class="card">
                 <div class="card-content">
                   <div class="media">
@@ -68,13 +68,13 @@
             </div>
           </div>
         </div>
-        <div v-if="transaction.data.transaction.memo">
+        <div v-if="transaction.transaction.memo">
           <div class="columns">
             <div class="column" style="text-align:left">
               <div class="card">
                 <div class="card-content">
                   <h1 class="title is-4">Memo field:</h1>
-                  {{ transaction.data.transaction.memo }}
+                  {{ transaction.transaction.memo }}
                 </div>
               </div>
             </div>
@@ -132,28 +132,29 @@
                 sidechain_address: app.$route.params.sidechain,
                 sxid: app.$route.params.sxid
               })
-              .then(response => {
+              .then(async response => {
                 app.transaction = response.transaction;
                 
-                for(let x in app.transaction.data.transaction.outputs){
+                for(let x in app.transaction.transaction.outputs){
                   if(x !== app.transaction.address){
                     app.to = x
-                    app.amount = app.transaction.data.transaction.outputs[x]
+                    app.amount = app.transaction.transaction.outputs[x]
                   }
                 }
                 if(app.to === ''){
-                  for(let x in app.transaction.data.transaction.outputs){
+                  for(let x in app.transaction.transaction.outputs){
                     app.to = x
-                    app.amount = app.transaction.data.transaction.outputs[x]
+                    app.amount = app.transaction.transaction.outputs[x]
                   }
                 }
-                let date = new Date(app.transaction.data.transaction.time)
+                let date = new Date(app.transaction.transaction.time)
                 let year = date.getFullYear()
                 let month = date.getMonth() + 1
                 let day = date.getDate()
                 let hours = date.getHours()
                 let minutes = "0" + date.getMinutes()
-                app.transaction.data.transaction.time = day + '/' + month + '/' + year +' at ' + hours + ':' + minutes.substr(-2)
+                app.transaction.address = await app.scrypta.getAddressFromPubKey(app.transaction.pubkey)
+                app.transaction.transaction.time = day + '/' + month + '/' + year +' at ' + hours + ':' + minutes.substr(-2)
                 app.isLoading = false
               });
             }
