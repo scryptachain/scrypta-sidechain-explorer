@@ -184,11 +184,11 @@
             </b-tab-item>
             
             <b-tab-item label="Txs by day" style="text-align:center">
-              <apexchart width="100%" height="350px" type="bar" :options="txOptions" :series="txSeries"></apexchart>
+              <apexchart v-if="!isLoading" width="100%" height="350px" type="bar" :options="txOptions" :series="txSeries"></apexchart>
             </b-tab-item>
             
             <b-tab-item label="Txs by user" style="text-align:center">
-              <apexchart width="100%" height="350px" type="bar" :options="txuserOptions" :series="txuserSeries"></apexchart>
+              <apexchart v-if="!isLoading" width="100%" height="350px" type="bar" :options="txuserOptions" :series="txuserSeries"></apexchart>
             </b-tab-item>
         </b-tabs>
       </div>
