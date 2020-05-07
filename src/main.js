@@ -10,11 +10,13 @@ import { faCheck, faCheckCircle, faInfoCircle, faExclamationTriangle, faExclamat
     faArrowUp, faAngleRight, faAngleLeft, faAngleDown, faPen, faTrash, faFileCsv,
     faEye, faEyeSlash, faCaretDown, faCaretUp, faUpload, faArrowRight } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
+import VueApexCharts from 'vue-apexcharts'
 
 library.add(faCheck, faCheckCircle, faInfoCircle, faExclamationTriangle, faExclamationCircle,
     faArrowUp, faAngleRight, faAngleLeft, faAngleDown, faPen, faTrash, faFileCsv, faArrowRight,
     faEye, faEyeSlash, faCaretDown, faCaretUp, faUpload)
 
+Vue.component('apexchart', VueApexCharts)
 Vue.component('vue-fontawesome', FontAwesomeIcon)
 Vue.config.productionTip = false
 Vue.use(Buefy, {

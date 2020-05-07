@@ -15,7 +15,56 @@
                 <p class="title is-5">{{ totalSupply }} {{ sidechain.symbol }}</p>
                 <p class="subtitle is-6" style="margin-bottom:0">issued by <b style="color:#000">{{ sidechain.owner }}</b></p>
                 <p class="subtitle is-6" style="margin-bottom:0">CAP: {{ cap }} {{ sidechain.symbol }} - BURNED: {{ burned }} {{ sidechain.symbol }}</p>
-                <!--<b-button type="is-primary" v-on:click="toggleDetails" style="margin:5px 0;  cursor:pointer;"><span v-if="!showDetails">SHOW</span><span v-if="showDetails">HIDE</span> DETAILS</b-button>-->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="columns" style="margin-top:20px">
+          <div class="column">
+            <div class="card">
+              <div class="card-content">
+                <p class="title">
+                  {{ totalusers }}
+                </p>
+                <p class="subtitle">
+                  Total users
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="card">
+              <div class="card-content">
+                <p class="title">
+                  {{ totaltransactions }}
+                </p>
+                <p class="subtitle">
+                  Total transactions
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="card">
+              <div class="card-content">
+                <p class="title">
+                  {{ averageperday }}
+                </p>
+                <p class="subtitle">
+                  Average txs/day
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="card">
+              <div class="card-content">
+                <p class="title">
+                  {{ averagetransactions }}
+                </p>
+                <p class="subtitle">
+                  Average txs/user
+                </p>
               </div>
             </div>
           </div>
@@ -133,6 +182,14 @@
                 </a>
               </div>
             </b-tab-item>
+            
+            <b-tab-item label="Txs by day" style="text-align:center">
+              <apexchart width="100%" height="350px" type="bar" :options="txOptions" :series="txSeries"></apexchart>
+            </b-tab-item>
+            
+            <b-tab-item label="Txs by user" style="text-align:center">
+              <apexchart width="100%" height="350px" type="bar" :options="txuserOptions" :series="txuserSeries"></apexchart>
+            </b-tab-item>
         </b-tabs>
       </div>
     </div>
@@ -142,7 +199,6 @@
 
 <script>
   let ScryptaCore = require("@scrypta/core");
-
   export default {
     name: "home",
     data() {
@@ -152,18 +208,38 @@
           confirmed: [],
           unconfirmed: []
         },
-        compacted: {
-          confirmed: [],
-          unconfirmed: []
-        },
         sidechain: [],
         shares: [],
         burned: 0,
         cap: 0,
-        options: {
-          labels: []
+        averagetransactions: 0,
+        averageperday: 0,
+        totalusers: 0,
+        totaltransactions: 0,
+        txOptions: {
+          chart: {
+            id: 'chart-transactions'
+          },
+          xaxis: {
+            categories: []
+          }
         },
-        series: [],
+        txSeries: [{
+          name: 'Total transactions',
+          data: []
+        }],
+        txuserOptions: {
+          chart: {
+            id: 'chart-users'
+          },
+          xaxis: {
+            categories: []
+          }
+        },
+        txuserSeries: [{
+          name: 'Total transactions',
+          data: []
+        }],
         totalSupply: "-",
         showShares: false,
         showDetails: false,
@@ -238,15 +314,9 @@
               })
               .then(response => {
                 let shares = response.shares
-                app.series = []
                 app.shares = []
                 app.totalSupply = response.cap
-                app.options = {
-                  labels: []
-                }
                 for(let x in shares){
-                  app.series.push(shares[x].shares)
-                  app.options.labels.push(x + ' ' + shares[x].balance + ' ' + app.sidechain.symbol)
                   let details = {
                     address: x,
                     balance: shares[x].balance + ' ' + app.sidechain.symbol,
@@ -268,7 +338,16 @@
               })
               .then(response => {
                 let transactions = { confirmed: [], unconfirmed: [] };
-                let compacted = { confirmed: [], unconfirmed: [] };
+                app.txOptions.xaxis.categories = []
+                app.txSeries.data = []
+                app.txuserOptions.xaxis.categories = []
+                app.txuserSeries.data = []
+                let statsbyday = {}
+                let statsbyuser = {}
+                let totaltransactions = 0
+                let totalusers = 0
+                let totaldays = 0
+
                 for (let x in response.data) {
                   let value = 0;
                   let to = "";
@@ -307,6 +386,23 @@
                     let minutes = "0" + date.getMinutes()
                     let formattedTime = day + '/' + month + '/' + year +' at ' + hours + ':' + minutes.substr(-2)
 
+                    if(statsbyday[day+'/'+month+'/'+year] === undefined){
+                      statsbyday[day+'/'+month+'/'+year] = 0
+                      totaldays++
+                    }
+
+                    statsbyday[day+'/'+month+'/'+year] ++
+
+                    if(from !== app.sidechain.owner){
+                      let fromcompact = from.substr(0,3) + '-' + from.substr(-3)
+                      if(statsbyuser[fromcompact] === undefined){
+                        statsbyuser[fromcompact] = 0
+                        totalusers++
+                      }
+                      statsbyuser[fromcompact] ++
+                      totaltransactions++
+                    }
+
                     let transaction = {
                       sxid: response.data[x].sxid,
                       value: value + " " + app.sidechain.symbol,
@@ -315,25 +411,30 @@
                       block: Block,
                       time: formattedTime
                     };
-                    let compact = {
-                      sxid: response.data[x].sxid.substr(0,4) + '...' + response.data[x].sxid.substr(-4),
-                      value: value + " " + app.sidechain.symbol,
-                      from: from.substr(0,4) + '...' + from.substr(-4),
-                      to: to.substr(0,4) + '...' + to.substr(-4),
-                      block: Block,
-                      time: formattedTime
-                    };
                     if(response.data[x].block > 0){
                       transactions.confirmed.push(transaction);
-                      compacted.confirmed.push(compact);
                     }else{
                       transactions.unconfirmed.push(transaction);
-                      compacted.unconfirmed.push(compact);
                     }
                   }
                 }
+                let xy = 0
+                for(let x in statsbyday){
+                  app.txOptions.xaxis.categories.push(x)
+                  app.txSeries[0].data[xy] = statsbyday[x]
+                  xy++
+                }
+                let yy = 0
+                for(let x in statsbyuser){
+                  app.txuserOptions.xaxis.categories.push(x)
+                  app.txuserSeries[0].data[yy] = statsbyuser[x]
+                  yy++
+                }
                 app.transactions = transactions;
-                app.compacted = compacted;
+                app.averagetransactions = (totaltransactions / totalusers).toFixed(2)
+                app.averageperday = (totaltransactions / totaldays).toFixed(2)
+                app.totalusers = totalusers
+                app.totaltransactions = totaltransactions
                 app.isLoading = false
               });
             }
