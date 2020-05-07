@@ -134,6 +134,7 @@
               })
               .then(async response => {
                 app.transaction = response.transaction;
+                app.transaction.address = await app.scrypta.getAddressFromPubKey(app.transaction.pubkey)
                 
                 for(let x in app.transaction.transaction.outputs){
                   if(x !== app.transaction.address){
@@ -153,7 +154,6 @@
                 let day = date.getDate()
                 let hours = date.getHours()
                 let minutes = "0" + date.getMinutes()
-                app.transaction.address = await app.scrypta.getAddressFromPubKey(app.transaction.pubkey)
                 app.transaction.transaction.time = day + '/' + month + '/' + year +' at ' + hours + ':' + minutes.substr(-2)
                 app.isLoading = false
               });
