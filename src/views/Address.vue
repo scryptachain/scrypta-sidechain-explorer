@@ -30,7 +30,7 @@
                 </div>
                   <div class="media-content">
                     <p class="title is-4" style="margin:0">{{ sidechain.name }}</p>
-                    <p class="title is-5">{{ sidechain.supply }}</p>
+                    <p class="title is-5">{{ sidechain.address }}</p>
                     <p class="subtitle is-6" style="margin-bottom:0">issued by <b style="color:#000">{{ sidechain.owner }}</b></p>
                     <div style="position:absolute; top:8px; right:0 ;height:80px; padding:30px; text-align:right"><b style="color:#000">Balance</b><br>{{ sidechain.balance }} {{ sidechain.symbol }}</div>
                   </div>
