@@ -87,11 +87,17 @@
               <span v-if="isUploading">Creating asset, please wait..</span>
             </div>
           </div>
-          <div v-if="!wallet" style="color:#fff; font-size:18px; font-weight:bold; margin-top:15px">
-            You must login with your ScryptaID to create a Sidechain.
-            <a href="/#/login"> 
-              <b-button size="sm" class="btn-danger my-2 my-sm-0">LOGIN</b-button>
-            </a>
+          <div v-if="!wallet" style="font-size:18px; width:100%; display:block; margin-top:15px">
+              <b-notification
+                type="is-danger"
+                has-icon
+                aria-close-label="Close notification"
+                role="alert">
+                You must login with your ScryptaID to create a Sidechain.<br>
+                <a href="/#/login"> 
+                  <b-button size="sm" class="btn-danger my-2 my-sm-0">LOGIN NOW</b-button>
+                </a>
+            </b-notification>
           </div>
         </div>
         <div class="column"></div>

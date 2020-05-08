@@ -55,6 +55,7 @@ export default {
       let identity = await app.scrypta.returnIdentity(app.address);
       app.wallet = identity;
       app.isLogging = false;
+      window.location = '/#/create'
     } else {
       app.isLogging = false;
     }
@@ -78,8 +79,9 @@ export default {
             if (key !== false) {
               app.scrypta.importPrivateKey(key.prv, password);
               localStorage.setItem("SID", dataKey);
-              window.location = '/#/'
-              location.reload()
+              setTimeout(function(){
+                location.reload()
+              },20)
             } else {
               app.$buefy.toast.open({
                 message: "Wrong password!",
