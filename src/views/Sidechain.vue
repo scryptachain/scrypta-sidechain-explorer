@@ -393,15 +393,13 @@
 
                     statsbyday[day+'/'+month+'/'+year] ++
 
-                    if(from !== app.sidechain.owner){
-                      let fromcompact = from.substr(0,3) + '-' + from.substr(-3)
-                      if(statsbyuser[fromcompact] === undefined){
-                        statsbyuser[fromcompact] = 0
-                        totalusers++
-                      }
-                      statsbyuser[fromcompact] ++
-                      totaltransactions++
+                    let fromcompact = from.substr(0,3) + '-' + from.substr(-3)
+                    if(statsbyuser[fromcompact] === undefined){
+                      statsbyuser[fromcompact] = 0
+                      totalusers++
                     }
+                    statsbyuser[fromcompact] ++
+                    totaltransactions++
 
                     let transaction = {
                       sxid: response.data[x].sxid,
