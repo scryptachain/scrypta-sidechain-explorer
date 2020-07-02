@@ -172,7 +172,7 @@
     methods: {
       showConfirm(){
         const app = this
-        if(app.asset.name !== "" && app.asset.symbol !== "" && app.supply > 0){
+        if(app.asset.name !== "" && app.asset.symbol !== "" && app.supply > 0 && app.supply <= 100000000){
           if(app.asset.symbol.length <= 5){
             app.openConfirm = true
           }else{
@@ -186,6 +186,12 @@
               message: 'Please write all required fields.',
               type: 'is-danger'
           })
+          if(app.supply >= 100000000){
+            this.$buefy.toast.open({
+              message: 'You can\'t issue more than 100M token at time!',
+              type: 'is-danger'
+            })
+          }
         }
       },
       fixStep(){

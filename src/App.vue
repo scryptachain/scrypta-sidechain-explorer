@@ -8,7 +8,7 @@
       </template>
       <template slot="start">
         <b-navbar-item href="/#/">Explorer</b-navbar-item>
-        <b-navbar-item href="https://wiki.scryptachain.org/developers/sidechain" target="_blank">Docs</b-navbar-item>
+        <b-navbar-item href="https://en.scrypta.wiki/planum/" target="_blank">Docs</b-navbar-item>
         <b-navbar-item v-if="wallet" href="/#/create">Create</b-navbar-item>
         <b-navbar-item v-if="wallet" href="/#/manage">Manage</b-navbar-item>
       </template>

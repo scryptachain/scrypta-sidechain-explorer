@@ -141,7 +141,7 @@ export default {
     },
     reissueSidechain(){
       const app = this;
-      if(app.supplyReissue > 0){
+      if(app.supplyReissue > 0 && app.supplyReissue <= 100000000){
         app.$buefy.dialog.prompt({
           message: `Enter wallet password`,
           inputAttrs: {
@@ -176,6 +176,11 @@ export default {
             }
           }
         });
+      }else if(app.supplyReissue >= 100000000){
+        this.$buefy.toast.open({
+            message: 'Can\'t reissue more than 100M at time!',
+            type: 'is-danger'
+        })
       }
     }
   }
