@@ -82,7 +82,7 @@
                 <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.to">{{ props.row.to }}</a>
               </b-table-column>
 
-              <b-table-column label="Amount">
+              <b-table-column label="Amount" v-slot="props">
                   {{ props.row.value }}
               </b-table-column>
 
