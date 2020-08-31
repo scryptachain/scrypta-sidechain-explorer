@@ -46,6 +46,23 @@
   </div>
 </template>
 
+<style>
+  .media-content{
+    text-align:left!important;
+  }
+  .table th{
+    padding:10px 0 10px 0 !important;
+  }
+  .table td{
+    padding:10px 0 5px 0!important;
+    font-size:12px;
+    text-align:left!important;
+  }
+  .table td button{
+    width:100%;
+    margin-top:-5px;
+  }
+</style>
 <script>
 let ScryptaCore = require("@scrypta/core");
 

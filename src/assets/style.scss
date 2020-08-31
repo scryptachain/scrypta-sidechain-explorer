@@ -39,7 +39,9 @@ $link-focus-border: $primary;
 body, html, .button{
     font-family: "Sen"!important;
 }
-
+.column{
+    max-width: 100%!important;
+}
 .social-shares span:hover{
     cursor:pointer!important;
     opacity:0.4!important;

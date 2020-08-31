@@ -68,13 +68,13 @@
             </div>
           </div>
         </div>
-        <div v-if="transaction.transaction.memo">
+        <div v-if="transaction.transaction.memo" style="max-width:100%">
           <div class="columns">
             <div class="column" style="text-align:left">
               <div class="card">
                 <div class="card-content">
                   <h1 class="title is-4">Memo field:</h1>
-                  {{ transaction.transaction.memo }}
+                  <pre>{{ transaction.transaction.memo }}</pre>
                 </div>
               </div>
             </div>
