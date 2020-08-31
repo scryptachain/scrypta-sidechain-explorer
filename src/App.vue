@@ -62,6 +62,16 @@
     width:100%;
     margin-top:-5px;
   }
+  @media screen and (max-width: 767px){
+    .table th{
+      padding:10px !important;
+    }
+    .table td{
+      padding:10px 10px 5px 10px!important;
+      font-size:12px;
+      text-align:left!important;
+    }
+  }
 </style>
 <script>
 let ScryptaCore = require("@scrypta/core");
