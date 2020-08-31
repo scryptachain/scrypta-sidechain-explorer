@@ -38,25 +38,23 @@
             aria-page-label="Page"
             aria-current-label="Current page">
 
-            <template slot-scope="props">
-              <b-table-column style="font-size:11px; padding-top:12px" field="from" label="From">
+              <b-table-column style="font-size:11px; padding-top:12px" field="from" label="From" v-slot="props">
                 <v-gravatar :email="props.row.from" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" /> 
                 <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.from">{{ props.row.from }}</a>
               </b-table-column>
 
-              <b-table-column style="font-size:11px; padding-top:12px" field="to" label="To">
+              <b-table-column style="font-size:11px; padding-top:12px" field="to" label="To" v-slot="props">
                 <v-gravatar :email="props.row.to" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" />
                 <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.to">{{ props.row.to }}</a>
               </b-table-column>
 
-              <b-table-column style="font-size:11px; padding-top:12px; text-align:center" field="sxid" label="SXID">
+              <b-table-column style="font-size:11px; padding-top:12px; text-align:center" field="sxid" label="SXID" v-slot="props">
                   {{ props.row.sxid.substr(0,12) }}...{{ props.row.sxid.substr(-12) }}
               </b-table-column>
 
-              <b-table-column label="Datetime" style="text-align:center">
+              <b-table-column label="Datetime" style="text-align:center" v-slot="props">
                   {{ props.row.time }}
               </b-table-column>
-            </template>
           </b-table>
           <b-table
             v-if="transactions.confirmed.length > 0"
@@ -74,13 +72,12 @@
             aria-page-label="Page"
             aria-current-label="Current page">
 
-            <template slot-scope="props">
-              <b-table-column style="font-size:11px; padding-top:12px" field="from" label="From">
+              <b-table-column style="font-size:11px; padding-top:12px" field="from" label="From" v-slot="props">
                 <v-gravatar :email="props.row.from" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" /> 
                 <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.from">{{ props.row.from }}</a>
               </b-table-column>
 
-              <b-table-column style="font-size:11px; padding-top:12px" field="to" label="To">
+              <b-table-column style="font-size:11px; padding-top:12px" field="to" label="To" v-slot="props">
                 <v-gravatar :email="props.row.to" style="float:left; height:20px; margin-top:-3px; width:20px; margin-right: 5px" />
                 <a :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.to">{{ props.row.to }}</a>
               </b-table-column>
@@ -89,22 +86,21 @@
                   {{ props.row.value }}
               </b-table-column>
 
-              <b-table-column style="font-size:11px; padding-top:12px; text-align:center" field="sxid" label="SXID">
+              <b-table-column style="font-size:11px; padding-top:12px; text-align:center" field="sxid" label="SXID" v-slot="props">
                   {{ props.row.sxid.substr(0,12) }}...{{ props.row.sxid.substr(-12) }}
               </b-table-column>
 
-              <b-table-column label="Datetime" style="text-align:center">
+              <b-table-column label="Datetime" style="text-align:center" v-slot="props">
                   {{ props.row.time }}
               </b-table-column>
 
-              <b-table-column label="Block" style="text-align:center">
+              <b-table-column label="Block" style="text-align:center" v-slot="props">
                   {{ props.row.block }}
               </b-table-column>
 
-              <b-table-column label="Details" style="text-align:center">
+              <b-table-column label="Details" style="text-align:center" v-slot="props">
                 <a :href="'/#/transaction/' + $route.params.sidechain + '/' + props.row.sxid"><b-button type="is-primary" size="is-small"> > </b-button></a>
               </b-table-column>
-            </template>
           </b-table>
         </div>
       </div>
