@@ -162,7 +162,8 @@
           symbol: "",
           decimals: 0,
           burnable: false,
-          reissuable: false
+          reissuable: false,
+          extendable: false
         }
       };
     },
