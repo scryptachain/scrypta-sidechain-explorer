@@ -207,6 +207,7 @@
       },
       createSidechain() {
         const app = this;
+        app.scrypta.staticnodes=true
         app.$buefy.dialog.prompt({
           message: `Enter wallet password`,
           inputAttrs: {
@@ -229,7 +230,8 @@
                   supply: parseFloat(app.supply),
                   decimals: parseFloat(app.asset.decimals),
                   reissuable: app.asset.reissuable,
-                  burnable: app.asset.burnable
+                  burnable: app.asset.burnable,
+                  extendable: false
                 }
               );
               if (
