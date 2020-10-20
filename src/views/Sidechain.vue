@@ -332,15 +332,16 @@ export default {
             let parsed = {
               name:
                 sidechain.genesis.name + " (" + sidechain.genesis.symbol + ")",
-              address: sidechain.address,
-              supply: sidechain.genesis.supply + " " + sidechain.genesis.symbol,
-              symbol: sidechain.genesis.symbol,
-              owner: sidechain.genesis.owner,
-              decimals: sidechain.genesis.decimals,
-            };
+                address: sidechain.address,
+                supply: sidechain.genesis.supply + " " + sidechain.genesis.symbol,
+                symbol: sidechain.genesis.symbol,
+                owner: sidechain.genesis.owner,
+                decimals: sidechain.genesis.decimals,
+              };
             app.sidechain = parsed;
-            app.scrypta
-              .post("/sidechain/shares", {
+            app.scrypta.usePlanum(app.$route.params.sidechain)
+            app.scrypta.verifyPlanum()
+            app.scrypta.post("/sidechain/shares", {
                 sidechain_address: app.$route.params.sidechain,
               })
               .then((response) => {

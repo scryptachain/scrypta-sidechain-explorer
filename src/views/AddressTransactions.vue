@@ -194,6 +194,8 @@
                   owner: sidechain.genesis.owner
               };
               app.sidechain = parsed;
+              app.scrypta.usePlanum(app.$route.params.sidechain)
+              app.scrypta.verifyPlanum()
               app.scrypta.post("/sidechain/shares", {
                 sidechain_address: app.$route.params.sidechain
               })

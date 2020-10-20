@@ -133,6 +133,8 @@ export default {
     },
     fetchSidechain(){
       const app = this
+      app.scrypta.usePlanum(app.$route.params.sidechain)
+      app.scrypta.verifyPlanum()
       app.scrypta.post('/sidechain/get', {sidechain_address: app.$route.params.sidechain}).then(async response => {
         app.sidechain = response
         app.asset = app.sidechain.sidechain[0].data.genesis
