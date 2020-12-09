@@ -157,6 +157,7 @@
     },
     mounted: async function() {
       const app = this;
+    app.scrypta.staticnodes = true;
       app.fetchSidechain();
       setInterval(function(){
         app.fetchSidechain()

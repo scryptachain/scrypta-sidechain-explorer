@@ -142,7 +142,7 @@ export default {
     },
     logout() {
       localStorage.setItem("SID", "");
-      location.reload();
+      window.location = '/#/'
     },
     async createUser() {
       const app = this;

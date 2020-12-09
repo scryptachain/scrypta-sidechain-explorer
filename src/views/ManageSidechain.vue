@@ -34,13 +34,13 @@
           <div class="card-content">
             <div class="media">
             <div class="media-left">
-              <figure class="image is-64x64">
+              <figure class="image is-92x92">
                 <v-gravatar :email="$route.params.sidechain" />
               </figure>
             </div>
               <div class="media-content" style="position:relative">
                 <p class="title is-4" style="margin:0 0 0 0">Manage {{ sidechain.sidechain[0].data.genesis.name }} - {{ sidechain.sidechain[0].data.genesis.symbol }}</p>
-                <p class="title is-6" style="margin:15px 0 0 0">{{ $route.params.sidechain }}</p>
+                <p class="title is-6" style="margin:15px 0 0 0"><b>{{ $route.params.sidechain }}</b><br>issued by <b>{{ sidechain.sidechain[0].data.genesis.owner }}</b></p>
                 <a :href="'/#/sidechain/' + $route.params.sidechain" target="_blank">
                   <b-icon
                       style="position:absolute; top:15px; right:15px"
@@ -102,7 +102,7 @@
                 <h3 class="title is-4">Validators</h3>
                 <a href="#" v-on:click="openValidator = true">
                   <b-icon
-                      v-if="address === sidechain.sidechain[0].data.owner"
+                      v-if="address === sidechain.sidechain[0].data.genesis.owner"
                       style="position:absolute; z-index:19; top:15px; right:15px; color: #D8213B; cursor:pointer;"
                       pack="fas"
                       icon="plus"
@@ -118,7 +118,7 @@
                         {{ authorizedaddress }}
                         <a href="#" v-on:click="deleteValidator(authorizedaddress)">
                         <b-icon
-                          v-if="address === sidechain.sidechain[0].data.owner"
+                          v-if="address === sidechain.sidechain[0].data.genesis.owner"
                           style="position:absolute; z-index:19; top:15px; right:15px; color: #D8213B; cursor:pointer;"
                           pack="fas"
                           icon="trash"
@@ -138,7 +138,7 @@
                 <h3 class="title is-4">Users</h3>
                 <a href="#" v-on:click="openUser = true">
                   <b-icon
-                      v-if="address === sidechain.sidechain[0].data.owner || permissions.validators.indexOf(address) !== -1"
+                      v-if="address === sidechain.sidechain[0].data.genesis.owner || permissions.validators.indexOf(address) !== -1"
                       style="position:absolute; z-index:19; top:15px; right:15px; color: #D8213B; cursor:pointer;"
                       pack="fas"
                       icon="plus"
@@ -154,7 +154,7 @@
                         {{ authorizedaddress }}
                         <a href="#" v-on:click="deleteUser(authorizedaddress)">
                           <b-icon
-                              v-if="address === sidechain.sidechain[0].data.owner || permissions.validators.indexOf(address) !== -1"
+                              v-if="address === sidechain.sidechain[0].data.genesis.owner || permissions.validators.indexOf(address) !== -1"
                               style="position:absolute; z-index:19; top:15px; right:15px; color: #D8213B; cursor:pointer;"
                               pack="fas"
                               icon="trash"

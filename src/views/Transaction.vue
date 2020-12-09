@@ -110,6 +110,7 @@
     },
     mounted: async function() {
       const app = this;
+      app.scrypta.staticnodes = true;
       app.fetchTransaction()
     },
     methods: {
