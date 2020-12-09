@@ -24,6 +24,9 @@
           <b>Burnable</b>
           : {{ asset.burnable }}
           <br />
+          <b>Permissioned</b>
+          : {{ asset.permissioned }}
+          <br />
           <br />
           <strong style="color:#f00">
             This operation will create this asset and will send the asset to your wallet:<br>{{ address }}.
@@ -70,10 +73,17 @@
           <div style="text-align:left">
             <div class="field">
               <b-checkbox v-model="asset.reissuable">Reissuable</b-checkbox>
+              <p>You can set your asset as "reissuable" (owner can add any amount of supply also after the asset is issued)-</p>
             </div>
+            <br>
             <div class="field">
-              <b-checkbox v-model="asset.burnable">Burnable</b-checkbox><br><br>
-              <p>You can set your asset as  "reissuable" (owner can add any amount of supply also after the asset is issued), and "burnable" (anyone can destroy a portion or the whole supply of the asset sending assets to a proper burn address.</p>
+              <b-checkbox v-model="asset.burnable">Burnable</b-checkbox><br>
+              <p>You can set your asset as "burnable" (anyone can destroy a portion or the whole supply of the asset sending assets to a proper burn address).</p>
+            </div>
+            <br>
+            <div class="field">
+              <b-checkbox v-model="asset.permissioned">Permissioned</b-checkbox><br>
+              <p>You can set your asset as "permissioned" (all users must be enabled to operate by the owner or a validator, only you will be able to create validators).</p>
             </div>
           </div>
           <div v-if="wallet">
@@ -163,7 +173,8 @@
           decimals: 0,
           burnable: false,
           reissuable: false,
-          extendable: false
+          extendable: false,
+          permissioned: false
         }
       };
     },
@@ -231,6 +242,7 @@
                   decimals: parseFloat(app.asset.decimals),
                   reissuable: app.asset.reissuable,
                   burnable: app.asset.burnable,
+                  permissioned: app.asset.permissioned,
                   extendable: false
                 }
               );

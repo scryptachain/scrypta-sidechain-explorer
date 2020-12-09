@@ -4,7 +4,7 @@
       <div class="column">
         <b-input v-model="searcher" placeholder="Search for a sidechain.." style="margin-bottom:15px"></b-input>
         <div v-for="sidechain in filteredList" v-bind:key="sidechain.address" style="margin-bottom:15px">
-          <a :href="'/#/sidechain/' + sidechain.address">
+          <a :href="'/#/sidechain/' + sidechain.address" v-if="sidechain.address !== '6TZMkQRiFu3frTDeXpapYNMhQggKgp755b'">
             <div class="card">
               <div class="card-content">
                 <div class="media">

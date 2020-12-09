@@ -11,7 +11,7 @@
               </figure>
             </div>
               <div class="media-content">
-                <p class="title is-4" style="margin:0 0 0 0">Assets you've created</p>
+                <p class="title is-4" style="margin:0 0 0 0">Assets you can manage</p>
                 <p class="title is-6" style="margin:15px 0 0 0">{{ address }}</p>
               </div>
             </div>
@@ -89,7 +89,7 @@ export default {
         let sidechains = []
         for(let x in response.data){
           let sidechain = response.data[x]
-          if(sidechain.genesis.owner === app.address){
+          if(sidechain.genesis.owner === app.address || (sidechain.validators !== undefined && sidechain.validators.indexOf(app.address) !== -1)){
             let parsed = {
               name: sidechain.genesis.name + ' (' + sidechain.genesis.symbol + ')',
               address: sidechain.address,

@@ -123,8 +123,8 @@
               >{{ props.row.time }}</b-table-column>
             </b-table>
             <b-table
-              v-if="transactions.confirmed.length > 0"
-              :data="transactions.confirmed"
+              v-if="confirmed.length > 0"
+              :data="confirmed"
               :paginated="isPaginated"
               :per-page="perPage"
               :current-page.sync="currentPage"
@@ -180,6 +180,72 @@
             </b-table>
           </b-tab-item>
 
+          <b-tab-item label="Locked transactions">
+            <b-table
+              v-if="delayed.length > 0"
+              :data="delayed"
+              :paginated="false"
+              :per-page="perPage"
+              :current-page.sync="currentPage"
+              :pagination-simple="isPaginationSimple"
+              :pagination-position="paginationPosition"
+              :default-sort-direction="defaultSortDirection"
+              :sort-icon="sortIcon"
+              :sort-icon-size="sortIconSize"
+              aria-next-label="Next page"
+              aria-previous-label="Previous page"
+              aria-page-label="Page"
+              aria-current-label="Current page"
+            >
+              <b-table-column
+                style="font-size:11px; padding-top:12px"
+                field="from"
+                label="From"
+                v-slot="props"
+              >
+                <v-gravatar
+                  :email="props.row.from"
+                  style="float:left; height:20px; margin-top:0px; width:20px; margin-right: 5px"
+                />
+                <a
+                  :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.from"
+                >{{ props.row.from }}</a>
+              </b-table-column>
+
+              <b-table-column
+                style="font-size:11px; padding-top:12px"
+                field="to"
+                label="To"
+                v-slot="props"
+              >
+                <v-gravatar
+                  :email="props.row.to"
+                  style="float:left; height:20px; margin-top:0px; width:20px; margin-right: 5px"
+                />
+                <a
+                  :href="'/#/sidechain/' + $route.params.sidechain + '/' + props.row.to"
+                >{{ props.row.to }}</a>
+              </b-table-column>
+
+              <b-table-column label="Amount"  v-slot="props">{{ props.row.value }}</b-table-column>
+
+              <b-table-column
+                style="font-size:11px; padding-top:12px; text-align:center"
+                field="sxid"
+                label="SXID"
+                v-slot="props"
+              >{{ props.row.sxid.substr(0,12) }}...{{ props.row.sxid.substr(-12) }}</b-table-column>
+
+              <b-table-column
+                label="Datetime"
+                style="text-align:center"
+                v-slot="props"
+              >{{ props.row.time }}</b-table-column>
+            </b-table>
+            <div v-if="delayed.length === 0" style="padding:30px 0">
+              No transactions locked.
+            </div>
+          </b-tab-item>
           <b-tab-item label="Shares list">
             <div
               v-for="address in shares"
@@ -245,6 +311,8 @@ export default {
         confirmed: [],
         unconfirmed: [],
       },
+      confirmed: [],
+      delayed: [],
       sidechain: [],
       shares: [],
       burned: 0,
@@ -372,6 +440,8 @@ export default {
               })
               .then((response) => {
                 let transactions = { confirmed: [], unconfirmed: [] };
+                let confirmed = []
+                let delayed = []
                 app.txOptions.xaxis.categories = [];
                 app.txSeries.data = [];
                 app.txuserOptions.xaxis.categories = [];
@@ -381,6 +451,7 @@ export default {
                 let totaltransactions = 0;
                 let totalusers = 0;
                 let totaldays = 0;
+                let now = new Date().getTime()
 
                 for (let x in response.data) {
                   let value = 0;
@@ -466,7 +537,11 @@ export default {
                       time: formattedTime,
                     };
                     if (response.data[x].block > 0) {
-                      transactions.confirmed.push(transaction);
+                      if(response.data[x].transaction.time > now){
+                        delayed.push(transaction);
+                      }else{
+                        confirmed.push(transaction);
+                      }
                     } else {
                       transactions.unconfirmed.push(transaction);
                     }
@@ -485,6 +560,8 @@ export default {
                   yy++;
                 }
                 app.transactions = transactions;
+                app.delayed = delayed;
+                app.confirmed = confirmed;
                 app.averagetransactions = (
                   totaltransactions / totalusers
                 ).toFixed(2);
